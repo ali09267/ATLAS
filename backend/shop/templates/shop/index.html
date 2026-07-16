@@ -1,0 +1,360 @@
+{% extends 'shop/basic.html' %} 
+{% block style %}
+<style>
+  body {
+    background-color: rgba(0, 0, 0, 0.824);
+    color: white;
+  }
+  .col-md-3 img {
+    width: 90%;
+    height: 200px;
+    object-fit: cover;
+  }
+  .card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.501);
+    color: white;
+  }
+  .card {
+    height: 100%;
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+}
+#div span > .btn,
+.btn-div > span > .btn {
+    width: 100%;         
+}
+  .btn-div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    margin-top: auto;
+}
+
+.btn-div > span {
+    flex: 1;
+    display: flex;
+}
+
+.btn-div > a {
+    flex: 1;
+    display: flex;
+    text-decoration: none;
+}
+
+/* Add To Cart button fills its half */
+.btn-div > span > .btn {
+    width: 100%;
+    height: 36px;
+    white-space: nowrap;
+    font-size: 0.82rem;
+}
+
+/* View Details button fills its half */
+.btn-div > a > .btn {
+    width: 100%;
+    height: 36px;
+    white-space: nowrap;
+    font-size: 0.82rem;
+}
+
+/* -  1  + controls fill same space as Add To Cart did */
+.cart-controls {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 36px;
+    gap: 4px;
+}
+
+.cart-controls .btn {
+    flex: none;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    font-size: 1rem;
+    min-width: 0;
+}
+
+.cart-controls span {
+    flex: 1;
+    text-align: center;
+    font-size: 16px;
+}
+  .carousel-indicators .active {
+    background-color: rgba(168, 177, 194, 0.895);
+    width: 50px;
+    height: 4px;
+    /* border: 2px solid springgreen; */
+  }
+
+  .carousel-control-prev-icon,
+  .carousel-control-next-icon {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    padding: 10px;
+    background-color: rgba(0, 0, 0); /* lighter dark (default) */
+  }
+
+  .carousel-control-prev,
+  .carousel-control-next {
+    top: 0;
+    bottom: 0;
+    /* border: 2px solid forestgreen; */
+    margin-top: 100px;
+    height: 150px;
+  }
+</style>
+{% endblock %} {% block content %} {% load static %}
+
+<div class="container">
+  {% for title, slides, range in allProducts %}<!--loop through every product, range are no: of slides, slides are the products in each slide, title is the category name-->
+
+  <h3 class="my-4">{{ title }}</h3><!--display product category-->
+
+  <div
+    id="demo{{ forloop.counter }}"
+    class="carousel slide my-3"
+    data-bs-ride="carousel"
+  >
+    <!-- Indicators -->
+    <div class="carousel-indicators">
+      {% for i in range %}
+      <button
+        type="button"
+        data-bs-target="#demo{{ forloop.parentloop.counter }}"
+        data-bs-slide-to="{{ forloop.counter0 }}"
+        class="{% if forloop.first %}active{% endif %}"
+      ></button>
+      {% endfor %}
+    </div>
+
+    <!-- Slides -->
+    <div class="carousel-inner">
+      {% for slide in slides %}
+      <div class="carousel-item {% if forloop.first %}active{% endif %}">
+        <div class="row">
+          {% for i in slide %}
+          <div class="col-md-3">
+            <div class="card">
+              <img src="/media/{{ i.image }}" class="card-img-top" />
+              <div class="card-body">
+                <h5>{{ i.product_name }}</h5>
+                <p>{{ i.desc|slice:"0:20" }}...</p>
+
+                <!-- Hidden span to store product name for popover -->
+                <span id="vd{{ i.id }}" style="display: none"
+                  >{{ i.product_name }}</span
+                >
+
+                <div class="btn-div">
+    <span id="div{{ i.id }}">
+        <button class="btn btn-primary cart" id="{{ i.id }}">
+            Add To Cart
+        </button>
+    </span>
+
+    <a href="/shop/products/{{ i.id }}">
+        <button class="btn btn-primary">View Details</button>
+    </a>
+</div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Controls front and back in crousels -->
+    <button
+      class="carousel-control-prev"
+      type="button"
+      data-bs-target="#demo{{ forloop.counter }}"
+      data-bs-slide="prev"
+    >
+      <span class="carousel-control-prev-icon"></span>
+    </button>
+
+    <button
+      class="carousel-control-next"
+      type="button"
+      data-bs-target="#demo{{ forloop.counter }}"
+      data-bs-slide="next"
+    >
+      <span class="carousel-control-next-icon"></span>
+    </button>
+  </div>
+
+  {% endfor %}
+</div>
+
+{% endblock %} {% block js %}
+
+<script>
+
+
+  document.addEventListener("DOMContentLoaded", function () {
+    // Safe to access DOM now
+    const popEl = document.getElementById("popcart");
+    if (!popEl) {
+      console.error("popcart element not found!");
+      return;
+    }
+
+    let popInstance = bootstrap.Popover.getOrCreateInstance(popEl, {
+      html: true,
+      trigger: "manual",
+       customClass: "wide-popover",
+    });
+
+    var cart = {};
+    if (localStorage.getItem("cart") !== null) {
+      cart = JSON.parse(localStorage.getItem("cart"));
+      document.getElementById("cartLengthDisplay").innerText =
+        Object.keys(cart).length;
+      updateCart(cart);
+    }
+
+    // Navbar cart button click to toggle popover
+    popEl.addEventListener("click", function () {
+      updatePopover(cart);
+    });
+
+    function updateCart(cart) {
+      let sum = 0;
+      for (let item in cart) {
+        sum += cart[item];
+        let div = document.getElementById("div" + item);
+        if (div) {
+          div.innerHTML = `
+<div class="cart-controls">
+    <button id="minus${item}" class="btn btn-primary minus">-</button>
+    <span id="val${item}">${cart[item]}</span>
+    <button id="plus${item}" class="btn btn-primary plus">+</button>
+</div>
+`;
+        }
+      }
+      localStorage.setItem("cart", JSON.stringify(cart));
+      document.getElementById("cartLengthDisplay").innerText = sum;
+    }
+
+    function updatePopover(cart) {
+      let content = '<h4>Cart Items:</h4><div class="mx-2 my-2">';
+      let itemNo = 1;
+      let hasItems = false;
+      for (let item in cart) {
+        if (cart[item] > 0) {
+          let nameEl = document.getElementById("vd" + item);
+          let name = nameEl ? nameEl.innerText : "Item " + item;
+          content +=
+            "<b>" +
+            itemNo +
+            ".</b> " +
+            name +
+            " - Quantity: " +
+            cart[item] +
+            "<br>";
+          itemNo++;
+          hasItems = true;
+        }
+      }
+      content += "</div>";
+
+      if (hasItems) {
+         content += `
+            <div class="mt-3 d-flex gap-2">
+             
+                <a href="#" id="clearCart" class="btn btn-primary w-60 h-20">
+        Clear Cart
+    </a>
+
+                <a href="/shop/checkout" class="btn btn-primary w-60 h-20">
+                    Checkout
+                </a>
+            </div>
+        `;
+        popInstance.setContent({ ".popover-body": content });
+        popInstance.show();
+
+        console.log(content);
+      } else {
+        popInstance.hide();
+      }
+    }
+     document.addEventListener("click", function (e) {
+
+  if (e.target.id === "clearCart") {
+
+    e.preventDefault();
+
+    cart = {};
+
+    localStorage.removeItem("cart");
+
+    document.getElementById("cartLengthDisplay").innerText = 0;
+
+    document.querySelectorAll("[id^='div']").forEach(function (div) {
+
+      let id = div.id.replace("div", "");
+
+      div.innerHTML = `
+        <button class="btn btn-primary cart" id="${id}">
+          Add To Cart
+        </button>
+      `;
+    });
+
+    popInstance.hide();
+  }
+});
+
+    // Minus button
+    document.addEventListener("click", function (e) {
+      if (e.target.classList.contains("minus")) {
+        var idStr = e.target.id.slice(5);
+        cart[idStr] = Math.max((cart[idStr] || 1) - 1, 0);
+        document.getElementById("val" + idStr).innerHTML = cart[idStr];
+        localStorage.setItem("cart", JSON.stringify(cart));
+        updateCart(cart);
+      }
+    });
+
+    // Plus button
+    document.addEventListener("click", function (e) {
+      if (e.target.classList.contains("plus")) {
+        var idStr = e.target.id.slice(4);
+        cart[idStr] = (cart[idStr] || 0) + 1;
+        document.getElementById("val" + idStr).innerHTML = cart[idStr];
+        localStorage.setItem("cart", JSON.stringify(cart));
+        updateCart(cart);
+      }
+    });
+
+    //event delegation for Add To Cart buttons
+    document.addEventListener("click", function (e) {
+  if (e.target.classList.contains("cart")) {
+
+    let idStr = e.target.id;
+
+    cart[idStr] = (cart[idStr] || 0) + 1;
+
+    updateCart(cart);
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+  }
+});
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,180 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #1a1a1a;
+  color: #ffffff;
+}
+
+.confirm-wrapper {
+  min-height: 100vh;
+  background-color: #1a1a1a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  text-align: center;
+}
+
+/* ── green check circle ── */
+.check-circle {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background-color: #2d6a3f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+  animation: pop 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards;
+}
+
+.check-icon {
+  font-size: 32px;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+@keyframes pop {
+  0%   { transform: scale(0); opacity: 0; }
+  60%  { transform: scale(1.15); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ── heading ── */
+.confirm-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 0.4rem;
+}
+
+.confirm-sub {
+  font-size: 14px;
+  color: #aaaaaa;
+  margin-bottom: 1.5rem;
+}
+
+/* ── order details card ── */
+.confirm-card {
+  width: 100%;
+  max-width: 460px;
+  background-color: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  text-align: left;
+  margin-bottom: 1rem;
+}
+
+.card-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #888888;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 1rem;
+}
+
+.card-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.65rem;
+  font-size: 14px;
+  color: #cccccc;
+}
+
+.card-row span:first-child {
+  color: #aaaaaa;
+}
+
+.mono {
+  font-family: monospace;
+  font-size: 13px;
+  color: #ffffff;
+}
+
+/* ── pending badge ── */
+.badge-pending {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 3px 12px;
+  border-radius: 20px;
+  background-color: #3d3010;
+  color: #c9a227;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #3a3a3a;
+  margin: 0.85rem 0;
+}
+
+.card-row strong {
+  font-size: 15px;
+  color: #ffffff;
+}
+
+/* ── delivery box ── */
+.delivery-box {
+  width: 100%;
+  max-width: 460px;
+  background-color: #242424;
+  border: 1px solid #3a3a3a;
+  border-radius: 10px;
+  padding: 0.85rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  margin-bottom: 1.75rem;
+}
+
+.delivery-icon {
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.delivery-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 2px;
+}
+
+.delivery-sub {
+  font-size: 12px;
+  color: #888888;
+}
+
+/* ── action buttons ── */
+.confirm-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.confirm-actions .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  padding: 9px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid #444444;
+  background-color: #2a2a2a;
+  color: #ffffff;
+  transition: background-color 0.2s;
+}
+
+.confirm-actions .btn:hover {
+  background-color: #333333;
+}

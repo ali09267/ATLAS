@@ -1,0 +1,135 @@
+/* ===========================
+   STORE HEADER
+=========================== */
+.store-header {
+    background: #212529;
+    color: white;
+    height: 65px;
+    padding: 0 30px;
+    font-size: 1.8rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+
+    position: relative;
+    border-bottom: 1px solid #343a40;
+}
+
+/* Perfectly center the title */
+.store-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+
+}
+
+/* Push username to extreme right */
+.store-user {
+    margin-left: auto;
+    
+}
+
+
+/* ===========================
+   NAVBAR
+=========================== */
+
+.custom-navbar {
+    background-color: #1b1f23;
+    padding: 12px 25px;
+    position:sticky;
+
+top:0;
+
+z-index:1000;
+}
+
+.navbar-nav{
+
+gap:18px;
+}
+/* ===========================
+   SEARCH
+=========================== */
+
+.search-box {
+    width: 380px;
+    transition: .3s;
+}
+
+.search-box:focus {
+    width: 430px;
+}
+
+/* ===========================
+   USER
+=========================== */
+
+.user-name {
+    color: white;
+    font-weight: 600;
+    margin-right: 15px;
+}
+
+/* ===========================
+   MOBILE
+=========================== */
+
+.mobile-controls {
+    display: none;
+}
+#mobileMenu{
+
+    width:280px;
+
+}
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+@media(max-width:1190px){
+    .navbar-nav{
+        gap: 0px;
+    }
+}
+@media (max-width:1000px){
+
+    .desktop-nav{
+        display:none !important;
+    }
+
+    .mobile-controls{
+        display:flex;
+        width:100%;
+        justify-content:space-between;
+        align-items:center;
+        margin-top:15px;
+    }
+
+    .search-box{
+        width:100%;
+    }
+
+}
+@media (max-width:991px){
+.custom-navbar{
+    display: none;
+}
+
+}
+@media(max-width:770px){
+.store-header{
+    font-size: 1.5rem;
+}
+}
+
+@media(max-width:650px){
+.store-header{
+    font-size: 1.2rem;
+}
+}
+@media(max-width:550px){
+.store-header{
+    font-size: 1rem;
+}
+}

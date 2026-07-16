@@ -1,0 +1,72 @@
+from django.urls import path
+
+from django.conf import settings
+from django.conf.urls.static import static
+
+from shop.views.ai_views import ai_query
+from shop.views.analytical_view import analytics_test, top_selling_product_view
+
+from . import views
+from .views.auth_views import register, login_view, user_logout, check_auth
+from .views.customer_views import get_customers, customer_detail
+from .views.product_views import (
+    api_product_detail,
+    get_products,
+    product_detail,
+    products,
+    recommended_products,
+    search_products,
+)
+from .views.page_views import (
+    checkout,
+    index,
+    search,
+    tracker,
+)
+from .views.notification_views import (
+    NotificationListView,
+    save_device_token,
+    test_notification,
+    track_view,
+)
+from .views.order_views import get_orders, update_order_status, create_order
+
+from .views.gemini_view import gemini_test
+
+# map of our project, which path to follow for which view with optional name parameter
+# path("actual path/url/link","view.function_name",name="optional_name")
+urlpatterns = [
+    path("api/products/", get_products),
+    path("", index, name="shopHome"),
+    path("products/<int:myid>/", products, name="products"),
+    path("search", search, name="search"),
+    path("checkout", checkout, name="checkout"),
+    path("tracker", tracker, name="tracker"),
+    path("api/products/<int:myid>/", api_product_detail, name="apiProductDetail"),
+    path("api/register/", register),
+    path("api/logout/", user_logout),
+    path("api/check-auth/", check_auth),
+    path("api/create-order/", create_order, name="create_order"),
+    path("api/track-view/", track_view, name="track_view"),
+    path("api/recommendations/", recommended_products),
+    path("api/search/", search_products),  # for search/filter products
+    path("api/login/", login_view),
+    path("api/orders/", get_orders),
+    path("api/customers/", get_customers),
+    path("api/customers/<int:id>/", customer_detail),
+    path("api/edit_products/<int:id>/", product_detail),
+    path("notifications/", NotificationListView.as_view(), name="notifications"),
+    path(
+        "api/orders/<int:id>/status/",
+        update_order_status,
+    ),
+    path("api/device-token/", save_device_token),
+    path("api/test-notification/", test_notification),
+    path("api/analytics/test/", analytics_test),
+    path("api/analytics/top-selling-product/", top_selling_product_view),
+    path("api/gemini-test/", gemini_test),
+    path(
+        "api/ai-query/",
+        ai_query,
+    ),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

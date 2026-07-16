@@ -1,0 +1,273 @@
+/* ===========================
+   Orders Page
+=========================== */
+
+.orders-page {
+  padding: 30px;
+  color: #fff;
+}
+
+.orders-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.orders-header h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.orders-header p {
+  color: #9ca3af;
+  margin: 0;
+}
+
+.orders-count {
+  background: #1e293b;
+  color: white;
+  padding: 12px 22px;
+  border-radius: 12px;
+  font-weight: 600;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+/* ===========================
+   Table
+=========================== */
+
+.orders-table-container {
+  background: #111827;
+  border-radius: 18px;
+
+  border: 1px solid #2b3648;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.orders-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.orders-table thead {
+  background: #1f2937;
+}
+
+.orders-table thead th {
+  color: #d1d5db;
+  font-weight: 600;
+  padding: 18px;
+  font-size: 0.95rem;
+  border-bottom: 1px solid #2b3648;
+}
+
+.orders-table tbody td {
+  padding: 18px;
+  border-bottom: 1px solid #222f40;
+  vertical-align: middle;
+}
+
+.orders-table tbody tr {
+  transition: 0.25s;
+}
+
+.orders-table tbody tr:hover {
+  background: #182233;
+}
+
+/* ===========================
+   Order ID
+=========================== */
+
+.order-id {
+  background: #2563eb;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 10px;
+  font-weight: 700;
+  display: inline-block;
+}
+
+/* ===========================
+   Customer
+=========================== */
+
+.customer-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.customer-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: purple;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: white;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+/* ===========================
+   Products Dropdown
+=========================== */
+
+.products-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.products-btn {
+  background: #1f2937;
+  color: white;
+  border: 1px solid #374151;
+  padding: 9px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.25s;
+  font-weight: 500;
+}
+
+.products-btn:hover {
+  background: #2563eb;
+}
+
+.products-menu {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  width: 280px;
+  background: #1f2937;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: 0.25s;
+  z-index: 999;
+  border: 1px solid #374151;
+}
+
+.products-dropdown:hover .products-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.product-row {
+  padding: 14px 18px;
+  border-bottom: 1px solid #374151;
+}
+
+.product-row:last-child {
+  border-bottom: none;
+}
+
+.product-name {
+  font-weight: 600;
+  color: white;
+  margin-bottom: 4px;
+}
+
+.product-details {
+  color: #9ca3af;
+  font-size: 0.85rem;
+}
+
+/* ===========================
+   Items Badge
+=========================== */
+
+.items-badge {
+  background: #ebc725;
+  color: white;
+  padding: 7px 14px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+/* ===========================
+   Status
+=========================== */
+
+.status-select {
+  width: 190px;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 14px;
+  color: white;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+}
+
+.status-select option {
+  background: #1f2937;
+  color: white;
+}
+
+.status-select.pending {
+  background: #f59e0b;
+}
+
+.status-select.shipped {
+  background: #2563eb;
+}
+
+.status-select.confirmed {
+  background: #16a34a;
+}
+
+.status-select.cancelled {
+  background: #dc2626;
+
+}
+
+.no-orders {
+  text-align: center;
+  padding: 30px;
+  color: #9ca3af;
+}
+
+.save-btn {
+  background: #22c55e;
+
+  color: white;
+
+  border: none;
+
+  padding: 10px 18px;
+
+  border-radius: 10px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.save-btn:hover {
+  background: #16a34a;
+}
+@media (max-width: 992px) {
+  .orders-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .orders-table-container {
+    overflow-x: auto;
+  }
+
+  .orders-table {
+    min-width: 900px;
+  }
+}

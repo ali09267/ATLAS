@@ -1,0 +1,43 @@
+# -----------------------
+# Python
+# -----------------------
+__pycache__/
+*.py[cod]
+*.sqlite3
+db.sqlite3
+venv/
+env/
+ENV/
+
+# Django
+media/
+staticfiles/
+
+# -----------------------
+# React
+# -----------------------
+frontend/node_modules/
+frontend/dist/
+
+# -----------------------
+# Environment Variables
+# -----------------------
+.env
+.env.*
+!.env.example
+
+# -----------------------
+# VS Code
+# -----------------------
+.vscode/
+
+# -----------------------
+# Logs
+# -----------------------
+*.log
+
+# -----------------------
+# OS Files
+# -----------------------
+Thumbs.db
+.DS_Store

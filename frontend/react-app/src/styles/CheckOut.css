@@ -1,0 +1,135 @@
+.checkout-container {
+  min-height: 100vh;
+  background-color: #1a1a1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+/* ── card ── */
+.items-check {
+  width: 100%;
+  max-width: 500px;
+  background-color: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 14px;
+  padding: 2rem 1.75rem;
+  color: #ffffff;
+}
+
+.items-check h4 {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+  color: #ffffff;
+}
+
+/* ── product rows ── */
+.list-group {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem 0;
+}
+
+.items-list {
+  background-color: #333333 !important;
+  border: 1px solid #444444 !important;
+  border-radius: 8px !important;
+  padding: 0.75rem 1rem !important;
+  color: #dddddd;
+  font-size: 14px;
+  margin-bottom: 0.5rem !important;
+}
+
+.qty-chip {
+  background-color: #444444;
+  color: #eeeeee;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid #555555;
+  white-space: nowrap;
+}
+
+/* ── totals ── */
+.totals-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.65rem 1rem;
+  background-color: #333333;
+  border: 1px solid #3a3a3a;
+  border-radius: 8px;
+  margin-top: 0.5rem;
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.item-chip {
+  background-color: #2e88e1;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 3px 12px;
+  border-radius: 6px;
+}
+
+.price-chip {
+  background-color: #dc3545;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 3px 12px;
+  border-radius: 6px;
+}
+
+/* ── buttons ── */
+.btn-div {
+  display: flex;
+  gap: 12px;
+  margin-top: 1.5rem;
+}
+
+.btn-div .btn {
+  flex: 1;
+  padding: 10px 0;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 8px;
+  text-align: center;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  display: inline-block;
+}
+
+.btn-div .btn:hover {
+  opacity: 0.85;
+}
+
+.btn-div .btn-secondary {
+  background-color: #555555;
+  color: #ffffff;
+}
+
+.btn-div .btn-success {
+  background-color: #2d6a3f;
+  color: #ffffff;
+}
+
+/* ── responsive ── */
+@media (max-width: 480px) {
+  .items-check {
+    padding: 1.25rem 1rem;
+  }
+}
+
+@media (max-width: 350px) {
+  .items-check {
+    padding: 1rem 1rem;
+  }
+}

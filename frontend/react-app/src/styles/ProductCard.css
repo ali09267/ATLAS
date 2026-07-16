@@ -1,0 +1,310 @@
+/* ===========================
+        PRODUCT CARD
+=========================== */
+
+.product-card {
+  border: none;
+  border-radius: 14px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  margin-inline: 8px;
+  background: #212529;
+
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+}
+
+.product-card:hover {
+  transform: scale(1.014);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.35);
+}
+
+/* ===========================
+          IMAGE
+=========================== */
+
+.product-img {
+  width: calc(100% - 20px);
+  height: 55%;
+  object-fit: cover;
+
+  margin: 10px;
+
+  border-radius: 10px;
+
+  display: block;
+}
+
+/* ===========================
+         CARD BODY
+=========================== */
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+
+  padding: 0.9rem;
+}
+
+/* ===========================
+          TITLE
+=========================== */
+
+.product-title {
+  font-size: clamp(0.9rem, 1vw, 1.05rem);
+
+  font-weight: 600;
+
+  line-height: 1.35;
+
+  margin-bottom: 10px;
+
+  display: -webkit-box;
+
+
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
+}
+
+/* ===========================
+       DESCRIPTION
+=========================== */
+
+.product-description {
+  font-size: clamp(0.78rem, 0.9vw, 0.9rem);
+
+  color: rgba(255,255,255,.75);
+
+  line-height: 1.4;
+
+  margin-bottom: 15px;
+
+  display: -webkit-box;
+
+
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
+}
+
+/* ===========================
+           PRICE
+=========================== */
+
+.product-price {
+  font-size: clamp(1rem, 1vw, 1.15rem);
+
+  font-weight: bold;
+
+  margin-bottom: 15px;
+}
+
+/* ===========================
+      BUTTON CONTAINER
+=========================== */
+
+.button-area {
+  margin-top: auto;
+
+  display: flex;
+
+  gap: 8px;
+  
+}
+
+.button-area > * {
+  flex: 1;
+}
+
+/* ===========================
+        BUTTONS
+=========================== */
+
+.add-cart-btn,
+.quick-view-btn {
+
+  border: none;
+
+  border-radius: 8px;
+
+  background: #0d6efd;
+
+  color: white;
+
+  text-decoration: none;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 0.65rem;
+
+  font-size: 1rem;
+
+  transition: .25s;
+
+  white-space: nowrap;
+}
+
+.add-cart-btn:hover,
+.quick-view-btn:hover {
+
+  background: #0b5ed7;
+
+  color: white;
+
+}
+
+/* ===========================
+        QUANTITY
+=========================== */
+
+.qty-container {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 10px;
+
+  flex: 1;
+
+}
+
+.qty-btn {
+
+  border: none;
+
+  width: 32px;
+
+  height: 32px;
+
+  border-radius: 6px;
+
+  background: #0d6efd;
+
+  color: white;
+
+}
+
+/* ===========================
+        TABLET
+=========================== */
+
+@media (max-width:992px){
+
+.product-img{
+
+    width:calc(100% - 16px);
+
+    margin:8px;
+
+}
+
+.card-body{
+
+    padding:.8rem;
+
+}
+
+}
+
+/* ===========================
+        MOBILE
+=========================== */
+
+@media (max-width:768px){
+
+.product-card{
+
+    margin-inline:4px;
+
+}
+
+.product-img{
+
+    width:calc(100% - 12px);
+
+    margin:6px;
+
+}
+
+.card-body{
+
+    padding:.65rem;
+
+}
+
+.product-title{
+
+    font-size:.85rem;
+
+}
+
+.product-description{
+
+    font-size:.72rem;
+
+}
+
+.button-area{
+
+    flex-direction:column;
+
+    gap:6px;
+
+}
+
+.add-cart-btn,
+.quick-view-btn{
+
+    padding:.5rem;
+
+    font-size:.75rem;
+
+}
+
+.qty-btn{
+
+    width:28px;
+
+    height:28px;
+
+}
+
+}
+
+/* ===========================
+      VERY SMALL DEVICES
+=========================== */
+
+@media (max-width:420px){
+
+.product-title{
+
+    font-size:.8rem;
+
+}
+
+.product-description{
+
+    font-size:.68rem;
+
+}
+
+.add-cart-btn,
+.quick-view-btn{
+
+    font-size:.7rem;
+
+}
+
+}

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}My Awesome Cart{% endblock %}</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- custom styling in every page -->
+{%block style %}{%endblock%}
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<div class="container-fluid">
+
+<a class="navbar-brand" href="#">My Awesome Cart</a>
+<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+    <li class="nav-item">
+<a class="nav-link active" href="/shop">Home</a>
+</li>
+<li class="nav-item">
+<a class="nav-link active" href="/shop/tracker">Tracker</a>
+</li>
+<li class="nav-item">
+<a class="nav-link active" href="/shop/about">About Us</a>
+</li>
+<li class="nav-item">
+<a class="nav-link active" href="/shop/contact">Contact</a>
+</li>
+</ul>
+<button class="navbar-toggler "
+type="button"
+data-bs-toggle="collapse"
+data-bs-target="#navbarSupportedContent">
+
+<span class="navbar-toggler-icon"></span>
+</button>
+
+<div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+<form class="d-flex mx-auto" style="width: 50%;">
+<input class="form-control me-2" type="search" placeholder="Search">
+<button class="btn btn-outline-success">Search</button>
+</form>
+
+<!-- popover -->
+<button type="button" class="btn btn-secondary mx-2" 
+    id="popcart"
+    data-bs-toggle="popover"
+    data-bs-placement="bottom"
+    data-bs-html="true"
+    data-bs-title="🛒 Your Cart"
+    data-bs-content="">
+    Cart(<span id="cartLengthDisplay">0</span>)
+</button>
+</div>
+</div>
+</nav>
+
+{% block content %}{% endblock %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+{% block js %}{% endblock %}
+
+</body>
+</html>
