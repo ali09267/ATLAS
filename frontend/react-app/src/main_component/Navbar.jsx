@@ -5,6 +5,7 @@ import { useAuth } from "../auth/AuthContext";
 import { useNavigate } from "react-router-dom";
 import Logout from "../pages/Logout";
 import '../styles/Navbar.css'
+
 function Navbar({ allProducts = [],search,setSearch }) {
   const [showLogout, setShowLogout] = useState(false);//if login then show logout
   const [showPopover, setShowPopover] = useState(false);//if click cart then show popover
@@ -22,7 +23,7 @@ function Navbar({ allProducts = [],search,setSearch }) {
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
-    console.log("Current user:", user);
+
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
@@ -54,7 +55,7 @@ function Navbar({ allProducts = [],search,setSearch }) {
     type="button"
     data-bs-toggle="offcanvas"
     data-bs-target="#mobileMenu"
->
+    >
     <i className="bi bi-list fs-2 text-white"></i>
 </button>
     <span className="store-title">🛍My Awesome Cart</span>
@@ -74,11 +75,8 @@ function Navbar({ allProducts = [],search,setSearch }) {
       )}
 
       {showLoginAlert && (
-        <div style={{
-          position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.5)",
-          display: "flex", alignItems: "center", justifyContent: "center", zIndex: 9999
-        }}>
-          <div className="card p-4 text-center" style={{ width: "350px" }}>
+        <div className="login-alert-overlay">
+          <div className="card p-4 text-center" >
             <h5 className="mb-3">⚠️ Please login to checkout</h5>
             <div className="d-flex gap-3 justify-content-center">
               <Link to="/login" className="btn btn-success"
@@ -91,8 +89,6 @@ function Navbar({ allProducts = [],search,setSearch }) {
       )}
 
       <div className="container-fluid">
-       
-
        <div className="collapse navbar-collapse desktop-nav">
 
           {/* Nav links */}
@@ -111,12 +107,10 @@ function Navbar({ allProducts = [],search,setSearch }) {
             </li>
              <li className="nav-item">
               <Link className="nav-link" to="/ai" >AI Assistant</Link>
-            </li>
-           
+            </li>        
           </ul>
 
           {/* Search bar */}
-
   <input
     className="form-control search-box"
     type="search"
@@ -148,26 +142,15 @@ function Navbar({ allProducts = [],search,setSearch }) {
             </button>
 
             {showPopover && cartItems.length > 0 && (
-              <div style={{
-                position: "absolute",
-                right: 0,
-                top: "110%",
-                minWidth: "250px",
-                zIndex: 9999,
-                backgroundColor: "white",
-                color: "black",
-                borderRadius: "8px",
-                padding: "12px",
-                boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
-              }}>
+              <div className="cart-popover">
                 <h4>🛒 Your Cart</h4>
                 {cartItems.map(([id, qty], index) => (
-                  <p key={id}>
+                  <p key={id} className="cart-item">
                     <b>{index + 1}.</b> {productMap[id] || `Product #${id}`}
-                    <span style={{ marginLeft: "auto", float: "right" }}>Qty: {qty}</span>
+                    <span >Qty: {qty}</span>
                   </p>
                 ))}
-                <div className="d-flex gap-2 mt-3">
+                <div className="cart-buttons">
                   <button className="btn btn-primary w-50"
                     onClick={() => { clearCart(); setShowPopover(false); }}>
                     Clear Cart
@@ -191,9 +174,7 @@ function Navbar({ allProducts = [],search,setSearch }) {
       </div>
     </nav>
 
-
     {/*Navbar (below bar) code */}
-
     <div
     className="offcanvas offcanvas-end text-bg-dark"
     tabIndex="1"

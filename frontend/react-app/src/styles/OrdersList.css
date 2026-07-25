@@ -1,0 +1,33 @@
+.orders-list{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+}
+
+.order-card{
+
+    background:white;
+
+    color:black;
+
+    border-radius:12px;
+
+    padding:20px;
+
+    box-shadow:0 4px 12px rgba(0,0,0,.2);
+}
+
+.order-card h5{
+
+    margin-bottom:15px;
+}
+
+.order-card ul{
+
+    margin-top:10px;
+}
+
+.order-card li{
+
+    margin-bottom:6px;
+}

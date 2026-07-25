@@ -5,7 +5,7 @@ from rest_framework.decorators import (
 )
 from rest_framework.response import Response
 
-from shop.ai.gemini import classify_question
+from shop.ai.classifier import classify_question
 from shop.ai.dispatcher import dispatch
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -15,7 +15,7 @@ from rest_framework.permissions import IsAuthenticated
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def ai_query(request):
-    question = request.data.get("question")
+    question = request.data.get("question")  # we have the original text user typed
     if not question:
         return Response({"error": "Question is required"}, status=400)
 
@@ -26,7 +26,8 @@ def ai_query(request):
     intent = ai_result.get("intent")
     print("ai intent: ", intent)
     parameters = ai_result.get("parameters")
+    print("ai parameters: ", parameters)
     result = dispatch(
-        intent, parameters, request.user
+        intent, parameters, request.user, question
     )  # later we will need notifications, orders, id and all attributes of user
     return Response(result)

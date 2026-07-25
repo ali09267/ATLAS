@@ -51,9 +51,25 @@ def get_orders(request):
 
 @api_view(["PATCH"])
 def update_order_status(request, id):
-    order = Order.objects.get(id=id)
-    status = request.data.get("status")
 
+    # Get order first
+    order = Order.objects.get(id=id)
+
+    print("========== UPDATE ORDER ==========")
+    print("Order User ID:", order.user.id)
+    print("Order User:", order.user.first_name)
+
+    # Get all tokens for this user
+    device_tokens = DeviceToken.objects.filter(user=order.user)
+
+    print("Tokens found:", device_tokens.count())
+
+    for device in device_tokens:
+        print("Sending to:", device.user.first_name)
+        print("FCM:", device.token[:30])
+
+    # Update order status
+    status = request.data.get("status")
     order.status = status
     order.save()
 
@@ -61,14 +77,17 @@ def update_order_status(request, id):
     message = message_template.format(id=order.id) if message_template else ""
 
     Notification.objects.create(
-        user=order.user, order=order, title=title, message=message
+        user=order.user,
+        order=order,
+        title=title,
+        message=message,
     )
 
-    device_tokens = DeviceToken.objects.filter(user=order.user)
-
     for device in device_tokens:
-
-        send_push(device.token, "Order Delivered", "Your order has been delivered.")
-    print(Notification.objects.all())
+        try:
+            send_push(device.token, "Order Delivered", "Your order has been delivered.")
+            print("✅ Notification sent successfully")
+        except Exception as e:
+            print("❌ Notification failed:", e)
 
     return Response({"message": "Status Updated Successfully"})

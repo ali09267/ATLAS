@@ -44,3 +44,10 @@ def format_orders(orders):
         "type": "orders",
         "orders": serializer.data,
     }
+
+
+def chat(message):
+    return {
+        "type": "chat",
+        "message": message,
+    }

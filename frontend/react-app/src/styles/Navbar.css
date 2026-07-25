@@ -38,9 +38,8 @@
     background-color: #1b1f23;
     padding: 12px 25px;
     position:sticky;
-
+font-size: 1.1rem;
 top:0;
-
 z-index:1000;
 }
 
@@ -72,6 +71,65 @@ gap:18px;
 }
 
 /* ===========================
+   Login Alert Modal
+=========================== */
+
+.login-alert-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 9999;
+}
+
+.login-alert-card {
+  width: 350px;
+}
+
+/* ===========================
+   Cart Popover
+=========================== */
+
+.cart-popover {
+  position: absolute;
+  right: 0;
+  top: 110%;
+
+  min-width: 250px;
+
+  background: white;
+  color: black;
+
+  border-radius: 8px;
+  padding: 12px;
+
+  z-index: 9999;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.cart-popover h4 {
+  margin-bottom: 12px;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.cart-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+
+/* ===========================
    MOBILE
 =========================== */
 
@@ -83,6 +141,15 @@ gap:18px;
     width:280px;
 
 }
+
+/* ===========================
+   Mobile Menu
+=========================== */
+
+.offcanvas-body .nav-link {
+  margin-bottom: 15px;
+}
+
 /* ===========================
    RESPONSIVE
 =========================== */

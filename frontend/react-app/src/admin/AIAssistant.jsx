@@ -85,7 +85,13 @@ catch (error) {
               message.sender === "user" ? "message-row user" : "message-row ai"
             }
           >
-            <div className="chat-bubble">
+            <div
+    className={
+        message.sender === "user"
+        ? "chat-bubble user-bubble"
+        : "chat-bubble ai-bubble"
+    }
+>
 
                {message.text}
 

@@ -65,6 +65,7 @@ class NotificationListView(generics.ListAPIView):
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def save_device_token(request):
+
     token = request.data.get("token")
 
     if not token:
@@ -80,13 +81,3 @@ def save_device_token(request):
         device.save()
 
     return Response({"message": "Device token saved"})
-
-
-@api_view(["GET"])
-def test_notification(request):
-
-    device = DeviceToken.objects.first()
-
-    send_push(device.token, "Testing", "Hello from Django!")
-
-    return Response({"message": "Notification sent"})

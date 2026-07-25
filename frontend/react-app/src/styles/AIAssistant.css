@@ -1,153 +1,182 @@
-.ai-page{
-
-    padding:30px;
-
-    color:white;
-
+.ai-page {
+  padding: 30px;
+  color: white;
 }
 
-.ai-title{
-
-    font-size:42px;
-
-    font-weight:700;
-
+.ai-title {
+  font-size: 42px;
+  font-weight: 700;
 }
 
-.ai-subtitle{
-
-    color:#9ca3af;
-
-    margin-bottom:30px;
-
+.ai-subtitle {
+  color: #9ca3af;
+  margin-bottom: 30px;
 }
 
-
-.chat-container{
-
-    height:65vh;
-
-    overflow-y:auto;
-
-    background:#141b2d;
-
-    border-radius:20px;
-
-    padding:25px;
-
-    border:1px solid #283046;
-
+.chat-container {
+  height: 65vh;
+  overflow-y: auto;
+  background: #141b2d;
+  border-radius: 20px;
+  padding: 25px;
+  border: 1px solid #283046;
 }
 
-
-.message-row{
-
-    display:flex;
-
-    margin-bottom:20px;
-
+.message-row {
+  display: flex;
+  margin-bottom: 20px;
 }
 
-.message-row.user{
-
-    justify-content:flex-end;
-
+.message-row.user {
+  justify-content: flex-end;
 }
 
-.message-row.ai{
-
-    justify-content:flex-start;
-
+.message-row.ai {
+  justify-content: flex-start;
 }
 
+.chat-bubble {
+  white-space: pre-line;
+  line-height: 1.7;
+}
+/* ===========================
+      USER MESSAGE
+=========================== */
 
-.chat-bubble{
-
-    max-width:70%;
-
-    background:#20293d;
-
-    padding:15px 18px;
-
-    border-radius:18px;
-
-    line-height:1.7;
-
-    white-space:pre-line;
-
+.user-bubble {
+  max-width: 70%;
+  background: rgba(10, 152, 208, 0.986);
+  color: white;
+  padding: 15px 18px;
+  border-radius: 18px;
 }
 
+/* ===========================
+      AI MESSAGE
+=========================== */
 
-.chat-input-wrapper{
+.ai-bubble {
+  max-width: 100%;
+  width: 100%;
+  background: transparent;
+  padding: 0;
+}
+/* ===========================
+      INPUT
+=========================== */
 
-    margin-top:25px;
-
-    position:relative;
-
+.chat-input-wrapper {
+  margin-top: 25px;
+  position: relative;
 }
 
+.chat-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: #1a2236;
+  color: white;
+  padding: 18px 70px 18px 22px;
+  border-radius: 35px;
+  font-size: 17px;
+}
 
-.chat-input{
+.chat-input::placeholder {
+  color: #7b8190;
+}
 
-    width:100%;
-
-    border:none;
-
-    outline:none;
-
-    background:#1a2236;
-
-    color:white;
-
-    padding:18px 70px 18px 22px;
-
-    border-radius:35px;
-
-    font-size:17px;
-
+.send-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: none;
+  background: #f2f2f4;
+  color: black;
+  font-size: 22px;
+  cursor: pointer;
+  transition: 0.25s;
 }
 
 
-.chat-input::placeholder{
-
-    color:#7b8190;
-
+.send-btn:hover {
+  background: #d6d6d6;
 }
 
-
-.send-btn{
-
-    position:absolute;
-
-    right:10px;
-
-    top:50%;
-
-    transform:translateY(-50%);
-
-    width:46px;
-
-    height:46px;
-
-    border-radius:50%;
-
-    border:none;
-
-    background:#f2f2f4;
-
-    color:black;
-
-    font-size:22px;
-
-    cursor:pointer;
-
-    transition:.25s;
-
+.available-categories {
+    margin-top: 10px;
+    padding: 12px;
+    background: #1f2b45;
+    border-radius: 10px;
+    border-left: 4px solid #0dcaf0;
 }
 
+.category-heading {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #ffffff;
+}
 
-.send-btn:hover{
+.category-list {
+    margin: 0;
+    padding-left: 20px;
+}
 
-    background:#ccccce;
+.category-list li {
+    margin: 6px 0;
+    color: #d7e3fc;
+}
+/* ===========================
+      MOBILE
+=========================== */
 
+@media (max-width: 576px) {
+  .ai-page {
+    padding: 0;
+    background: #141b2d;
+    min-height: 100vh;
+  }
+
+  .ai-title {
+    padding: 20px 20px 0;
+    font-size: 2.3rem;
+  }
+
+  .ai-subtitle {
+    padding: 0 20px;
+  }
+
+  .chat-container {
+    border: none;
+    border-radius: 0;
+    padding: 15px;
+    background: transparent;
+    height: calc(100vh - 220px);
+  }
+
+  .chat-input-wrapper {
+    padding: 0 15px 15px;
+  }
+
+  .user-bubble {
+    max-width: 85%;
+  }
+}
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.message-row {
+  animation: fadeUp 0.25s ease;
 }

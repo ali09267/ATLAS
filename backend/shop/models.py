@@ -6,17 +6,22 @@ from django.conf import settings
 
 
 class Product(models.Model):
-    product_id = models.AutoField(primary_key=True)  # product id
-    product_name = models.CharField(max_length=50)  # product name upto 50 characters
-    category = models.CharField(max_length=50, default="")
-    price = models.IntegerField(default=0)
-    desc = models.CharField(
-        max_length=600
-    )  # product description upto 600 characters (can be longer)
-    image = models.ImageField(upload_to="shop/images", default="")
 
-    def __str__(self):
-        return self.product_name
+    product_id = models.AutoField(primary_key=True)
+
+    product_name = models.CharField(max_length=120)
+
+    brand = models.CharField(max_length=50, default="")
+
+    category = models.CharField(max_length=50, default="")
+
+    price = models.IntegerField(default=0)
+
+    desc = models.TextField()
+
+    specifications = models.JSONField(default=dict)
+
+    image = models.ImageField(upload_to="shop/images", default="")
 
 
 class Contact(models.Model):
@@ -89,7 +94,7 @@ class ProductView(models.Model):
     product = models.ForeignKey(  # what product he viewed
         Product, on_delete=models.CASCADE
     )
-    view_count = models.IntegerField(default=1)
+    view_count = models.IntegerField(default=1)  # how many times he viewed that product
     viewed_at = models.DateTimeField(auto_now_add=True)  # time he viewed that product
 
     def __str__(self):

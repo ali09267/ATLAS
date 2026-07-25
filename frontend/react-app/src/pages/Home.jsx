@@ -9,7 +9,7 @@ function Home() {
 
   const [recommended, setRecommended] = useState([]);
   const [results, setResults] = useState([]);
-  
+
   // ---------------------------
   // Recommended products API
   // ---------------------------
@@ -41,22 +41,19 @@ function Home() {
     return () => clearTimeout(delay);
   }, [search]);
 
-        const recommendationSlides = [];
+  const recommendationSlides = [];
 
-for (let i = 0; i < recommended.length; i += 4) {
-  recommendationSlides.push(recommended.slice(i, i + 4));
-}
+  for (let i = 0; i < recommended.length; i += 4) {
+    recommendationSlides.push(recommended.slice(i, i + 4));
+  }
 
   return (
     <div className="container my-4">
-
-<ProductCarousel
-    id="recommendedCarousel"
-    title="Recommended for you"
-    products={recommended}
-/>
- 
-
+      <ProductCarousel
+        id="recommendedCarousel"
+        title="Recommended for you"
+        products={recommended}
+      />
       {/* ---------------- Search Results ---------------- */}
 
       {search && search.trim() !== "" ? (
@@ -81,20 +78,20 @@ for (let i = 0; i < recommended.length; i += 4) {
         /* ---------------- Product Carousel ---------------- */
 
         allProducts.map((category, index) => {
-    const [title, slides] = category;
+          const [title, slides] = category;
 
-    // Flatten slides back into one array
-    const products = slides.flat();
+          // Flatten slides back into one array
+          const products = slides.flat();
 
-    return (
-        <ProductCarousel
-            key={index}
-            id={`carousel${index}`}
-            title={title}
-            products={products}
-        />
-    );
-})
+          return (
+            <ProductCarousel
+              key={index}
+              id={`carousel${index}`}
+              title={title}
+              products={products}
+            />
+          );
+        })
       )}
     </div>
   );

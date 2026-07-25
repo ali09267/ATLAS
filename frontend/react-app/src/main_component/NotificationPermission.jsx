@@ -26,8 +26,6 @@ function NotificationPermission() {
           serviceWorkerRegistration: registration,
         });
 
-        console.log("FCM Token:", token);
-
         const response = await fetch(
           "http://127.0.0.1:8000/shop/api/device-token/",
           {
@@ -39,11 +37,10 @@ function NotificationPermission() {
             body: JSON.stringify({
               token: token,
             }),
-          }
+          },
         );
 
         const data = await response.json();
-        console.log("Device token saved:", data);
       } catch (err) {
         console.error("FCM Error:", err);
       }

@@ -1,12 +1,17 @@
 from shop.models import Order, OrderItem
 from shop.ai.response_formatter import format_orders, format_products
+from django.db.models import Count
+from shop.ai.response_formatter import (
+    metric,
+    table,
+)
 
 
 def all_orders(user):
     orders = (
         Order.objects.filter(user=user)
         .prefetch_related("items__product")
-        .order_by("-order_date")
+        .order_by("-created_at")
     )
 
     return format_orders(orders)
@@ -16,12 +21,12 @@ def latest_order(user):
     order = (
         Order.objects.filter(user=user)
         .prefetch_related("items__product")
-        .order_by("-order_date")
+        .order_by("-created_at")
         .first()
     )
 
     if not order:
-        return {"type": "text", "message": "You haven't placed any orders yet."}
+        return {"type": "chat", "message": "You haven't placed any orders yet."}
 
     return format_orders([order])
 
@@ -34,7 +39,7 @@ def orders_by_status(user, status):
             status__iexact=status,
         )
         .prefetch_related("items__product")
-        .order_by("-order_date")
+        .order_by("-created_at")
     )
 
     return format_orders(orders)
@@ -49,13 +54,13 @@ def orders_between_dates(
     orders = (
         Order.objects.filter(
             user=user,
-            order_date__date__range=(
+            created_at__date__range=(
                 start_date,
                 end_date,
             ),
         )
         .prefetch_related("items__product")
-        .order_by("-order_date")
+        .order_by("-created_at")
     )
 
     return format_orders(orders)
@@ -97,11 +102,21 @@ def has_purchased_product(
     if item:
 
         return {
-            "type": "text",
+            "type": "chat",
             "message": f"Yes, you have purchased {item.product.product_name}.",
         }
 
     return {
-        "type": "text",
+        "type": "chat",
         "message": f"You haven't purchased any product matching '{keyword}'.",
     }
+
+
+def total_orders(user):
+    print("U CALLED ME")
+    count = Order.objects.filter(user=user).count()
+    print(count)
+    return metric(
+        title="Your Orders",
+        value=count,
+    )

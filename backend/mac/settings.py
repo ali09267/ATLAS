@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+import os
 
 load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -135,3 +136,4 @@ LOGOUT_REDIRECT_URL = "/accounts/login/"
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")

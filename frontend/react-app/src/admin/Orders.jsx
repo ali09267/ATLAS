@@ -9,7 +9,6 @@ function Orders() {
       .then((res) => res.json())
       .then((data) => {
         setOrders(data);
-        console.log("orders: ", data);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -22,7 +21,6 @@ function Orders() {
   };
 
   const handleSave = async (id) => {
-    console.log("patch is called");
     const order = orders.find((o) => o.id === id);
     await fetch(
       `http://127.0.0.1:8000/shop/api/orders/${id}/status/`,
@@ -40,7 +38,7 @@ function Orders() {
       },
     );
 
-    alert("Saved Successfully");
+    alert("Notification Sent Successfully");
   };
 
   return (
@@ -131,9 +129,7 @@ function Orders() {
                       }
                     >
                       <option value="PENDING">Pending</option>
-                      <option value="SHIPPED">
-                        Rider Out For Delivery
-                      </option>
+                      <option value="SHIPPED">Rider Out For Delivery</option>
                       <option value="CONFIRMED">Delivered</option>
                       <option value="CANCELLED">Cancelled</option>
                     </select>

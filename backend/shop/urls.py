@@ -26,12 +26,9 @@ from .views.page_views import (
 from .views.notification_views import (
     NotificationListView,
     save_device_token,
-    test_notification,
     track_view,
 )
 from .views.order_views import get_orders, update_order_status, create_order
-
-from .views.gemini_view import gemini_test
 
 # map of our project, which path to follow for which view with optional name parameter
 # path("actual path/url/link","view.function_name",name="optional_name")
@@ -61,10 +58,8 @@ urlpatterns = [
         update_order_status,
     ),
     path("api/device-token/", save_device_token),
-    path("api/test-notification/", test_notification),
     path("api/analytics/test/", analytics_test),
     path("api/analytics/top-selling-product/", top_selling_product_view),
-    path("api/gemini-test/", gemini_test),
     path(
         "api/ai-query/",
         ai_query,

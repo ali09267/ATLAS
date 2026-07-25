@@ -21,3 +21,19 @@ class AIIntents:
     SEARCH_PRODUCTS = "search_products"
 
     ORDERS_BETWEEN_DATES = "orders_between_dates"
+
+    MY_ORDERS = "my_orders"
+
+    LATEST_ORDER = "latest_order"
+
+    ORDERS_BY_STATUS = "orders_by_status"
+
+    PURCHASED_PRODUCTS = "purchased_products"
+
+    HAS_PURCHASED_PRODUCT = "has_purchased_product"
+
+    RECENTLY_VIEWED_PRODUCTS = "recently_viewed_products"
+
+    LAST_VIEWED_PRODUCT = "last_viewed_product"
+
+    GENERAL_CHATS = "general_chat"

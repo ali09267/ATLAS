@@ -15,7 +15,8 @@ import { AuthProvider } from "./auth/AuthContext";
 import Logout from "./pages/Logout";
 import Confirm from "./pages/Confirm";
 import Dashboard from "./admin/dashboard";
-import UserLayout from "./main_component/UserLayout";import AdminLayout from "./main_component/AdminLayout";
+import UserLayout from "./main_component/UserLayout";
+import AdminLayout from "./main_component/AdminLayout";
 import Products from "./admin/Products";
 import Customers from "./admin/Customers";
 import Orders from "./admin/Orders";
@@ -68,71 +69,60 @@ function App() {
       });
   }, []);
 
-
- useEffect(() => {
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker
-      .register("/firebase-messaging-sw.js")
-      .then((registration) => {
-        console.log("Firebase Service Worker registered:", registration);
-      })
-      .catch((error) => {
-        console.log("Registration failed:", error);
-      });
-  }
-}, []);
+  useEffect(() => {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker
+        .register("/firebase-messaging-sw.js")
+        .then((registration) => {})
+        .catch((error) => {
+          console.log("Registration failed:", error);
+        });
+    }
+  }, []);
 
   return (
-    
     // CartProvider wraps everything so all pages can access cart
     <CartProvider>
       {/* BrowserRouter enables URL-based navigation, tells React to handle routing when URLs change */}
       <AuthProvider>
         <BrowserRouter>
-        <NotificationsPermission />
+          <NotificationsPermission />
           <Routes>
+            {/* USER SIDE */}
+            <Route
+              element={
+                <UserLayout
+                  allProducts={allProducts}
+                  search={search}
+                  setSearch={setSearch}
+                />
+              }
+            >
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/tracker" element={<Tracker />} />
+              <Route path="/ai" element={<CustomerAssistant />} />
+              <Route path="/products/:id" element={<ProductDetail />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/order-success/:id" element={<Confirm />} />
+            </Route>
 
-    {/* USER SIDE */}
-    <Route
-  element={
-    <UserLayout
-      allProducts={allProducts}
-      search={search}
-      setSearch={setSearch}
-    />
-  }
->
-      <Route path="/" element={<Home />} />
-      <Route path="/about" element={<About />} />
-      <Route path="/contact" element={<Contact />} />
-      <Route path="/tracker" element={<Tracker />} />
-            <Route path="/ai" element={<CustomerAssistant />} />
-      <Route path="/products/:id" element={<ProductDetail />} />
-      <Route path="/checkout" element={<Checkout />} />
-      <Route path="/order-success/:id" element={<Confirm />} />
-    
-    </Route>
+            {/* AUTH */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
-    {/* AUTH */}
-    <Route path="/login" element={<Login />} />
-    <Route path="/register" element={<Register />} />
+            {/* ADMIN SIDE */}
+            <Route element={<AdminLayout />}>
+              <Route path="/admin/dashboard" element={<Dashboard />} />
+              <Route path="/admin/products" element={<Products />} />
+              <Route path="/admin/customers" element={<Customers />} />
+              <Route path="/admin/orders" element={<Orders />} />
 
-    {/* ADMIN SIDE */}
-    <Route element={<AdminLayout />}>
-      <Route path="/admin/dashboard" element={<Dashboard />} />
-      <Route path="/admin/products" element={<Products />} />
-      <Route path="/admin/customers" element={<Customers />} />
-      <Route path="/admin/orders" element={<Orders />} />
-      
-          <Route
-    path="/admin/notifications"
-    element={<Notifications/>}
-/>
-<Route path="/admin/ai" element={<AIAssistant />} />
-    </Route>
-
-  </Routes>
-
+              <Route path="/admin/notifications" element={<Notifications />} />
+              <Route path="/admin/ai" element={<AIAssistant />} />
+            </Route>
+          </Routes>
         </BrowserRouter>
       </AuthProvider>
     </CartProvider>
