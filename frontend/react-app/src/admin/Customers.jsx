@@ -1,30 +1,61 @@
 import { useEffect, useState } from "react";
-
+import "../styles/Customers.css";
+import { useRef } from "react";
+import SnackBar from "../main_component/SnackBar";
 function Customers() {
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const [editUser, setEditUser] = useState(null);
   const [deleteUser, setDeleteUser] = useState(null);
+  const [pendingDeleteUser, setPendingDeleteUser] = useState(null);
+  const [showSnackBar, setShowSnackBar] = useState(false);
+  const [timeRemaining, setTimeRemaining] = useState(5);
 
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
-    email: ""
+    email: "",
   });
+
+  const deleteTimerRef = useRef(null);
+
+  const fetchCustomers = async (page = 1, searchValue = "") => {
+    try {
+      const params = new URLSearchParams({
+        page: page,
+      });
+
+      if (searchValue.trim()) {
+        params.append("search", searchValue.trim());
+      }
+
+      const response = await fetch(
+        `http://127.0.0.1:8000/shop/api/customers/?${params.toString()}`,
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch customers");
+      }
+
+      const data = await response.json();
+      console.log("Fetched customers:", data.results);
+      setUsers(data.results || []);
+
+      setTotalPages(data.total_pages || 1);
+    } catch (error) {
+      console.error("Error fetching customers:", error);
+    }
+  };
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/shop/api/customers/")
-      .then(res => res.json())
-      .then(data => {
-        console.log("Fetched data:", data);
-        setUsers(data)
-    
-  });
-  }, []);
+    fetchCustomers(currentPage, search);
+  }, [currentPage, search]);
 
-  const filtered = users.filter(u =>
-    u.first_name.toLowerCase().includes(search.toLowerCase())
+  users.filter((u) =>
+    u.first_name.toLowerCase().includes(search.toLowerCase()),
   );
 
   // ---------------- UPDATE USER ----------------
@@ -34,197 +65,360 @@ function Customers() {
       {
         method: "PUT",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData)
-      }
+        body: JSON.stringify(formData),
+      },
     );
 
     if (res.ok) {
       const updated = await res.json();
 
-      setUsers(users.map(u =>
-        u.id === updated.id ? updated : u
-      ));
+      setUsers(users.map((u) => (u.id === updated.id ? updated : u)));
 
       setEditUser(null);
     }
   };
 
   // ---------------- DELETE USER ----------------
-  const handleDelete = async () => {
-    const res = await fetch(
-      `http://127.0.0.1:8000/shop/api/customers/${deleteUser.id}/`,
-      {
-        method: "DELETE"
-      }
+  const handleDelete = (user) => {
+    // If another customer is waiting for Undo,
+    // permanently delete that customer first.
+    if (pendingDeleteUser) {
+      clearTimeout(deleteTimerRef.current);
+
+      fetch(
+        `http://127.0.0.1:8000/shop/api/customers/${pendingDeleteUser.id}/`,
+        {
+          method: "DELETE",
+        },
+      );
+    }
+
+    // Save the selected customer in a local variable
+    const userToDelete = user;
+
+    console.log("Deleting user:", userToDelete);
+
+    // Remove customer from the UI immediately
+    setUsers((currentUsers) =>
+      currentUsers.filter((currentUser) => currentUser.id !== userToDelete.id),
     );
 
-    if (res.ok) {
-      setUsers(users.filter(u => u.id !== deleteUser.id));
-      setDeleteUser(null);
-    }
+    // Save customer temporarily for Undo
+    setPendingDeleteUser(userToDelete);
+
+    // Show snackbar
+    setShowSnackBar(true);
+
+    // Close the confirmation modal
+    setDeleteUser(null);
+
+    // Save the timer ID in the ref
+    deleteTimerRef.current = setTimeout(async () => {
+      const res = await fetch(
+        `http://127.0.0.1:8000/shop/api/customers/${userToDelete.id}/`,
+        {
+          method: "DELETE",
+        },
+      );
+
+      if (!res.ok) {
+        // Restore customer if backend deletion fails
+        setUsers((currentUsers) => [...currentUsers, userToDelete]);
+      }
+
+      // Hide snackbar
+      setShowSnackBar(false);
+
+      // Clear pending customer
+      setPendingDeleteUser(null);
+
+      // Clear timer reference
+      deleteTimerRef.current = null;
+    }, 5000);
+  };
+
+  const undoDelete = () => {
+    // Stop the 5-second timer
+    clearTimeout(deleteTimerRef.current); //clear the timer to prevent permanent deletion
+
+    // Restore the deleted customer in the UI
+    setUsers((currentUsers) => [
+      pendingDeleteUser, //all the customers that were there before deletion
+      ...currentUsers, //spread operator to add the rest of the customers after the deleted one
+    ]);
+
+    // Hide the snackbar
+    setShowSnackBar(false);
+
+    // Clear the temporarily deleted customer
+    setPendingDeleteUser(null);
+
+    // Clear the timer reference
+    deleteTimerRef.current = null;
   };
 
   return (
-    <div className="container mt-4">
+    <div className="customers-page">
+      <div className="customers-header">
+        <div>
+          <h2>Customers Management</h2>
 
-      <h2 className="mb-3">Customers</h2>
+          <p>View, search, and manage registered customers.</p>
+        </div>
 
-      {/* SEARCH */}
-      <input
-        className="form-control mb-3"
-        placeholder="Search customers..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
+        {/* Total customers card */}
+        <div className="customers-count-card">
+          <span>{users.length}</span>
+          <small>Customers</small>
+        </div>
+      </div>
 
-      {/* TABLE */}
-      <table className="table table-dark table-hover">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
+      {/* ================= SEARCH ================= */}
 
-        <tbody>
-          {filtered.map(user => (
-            <tr key={user.id}>
-              <td>{user.id}</td>
-              <td>{user.first_name} </td>
-              <td>{user.email}</td>
+      <div className="customers-toolbar">
+        <div className="customer-search-wrapper">
+          <span className="search-icon">⌕</span>
 
-              <td>
-                {/* EDIT BUTTON */}
-                <button
-                  className="btn btn-warning btn-sm me-2"
-                  onClick={() => {
-                    setEditUser(user);
-                    setFormData({
-                      first_name: user.first_name || "",
-                      last_name: user.last_name || "",
-                      email: user.email
-                    });
-                  }}
-                >
-                  Edit
-                </button>
+          <input
+            className="customer-search"
+            placeholder="Search customers by name or email..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+      </div>
 
-                {/* DELETE BUTTON */}
-                <button
-                  className="btn btn-danger btn-sm"
-                  onClick={() => setDeleteUser(user)}
-                >
-                  Delete
-                </button>
-              </td>
+      {/* ================= CUSTOMERS TABLE ================= */}
+
+      <div className="customers-table-wrapper">
+        <table className="customers-table">
+          <thead>
+            <tr>
+              <th>Customer ID</th>
+              <th>Customer</th>
+              <th>Email Address</th>
+              <th className="actions-heading">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
 
-      {/* ---------------- EDIT MODAL ---------------- */}
+          <tbody>
+            {users.length > 0 ? (
+              users.map((user) => {
+                /*
+              Create a full name.
+
+              If first_name and last_name exist:
+              Ali Ahmed
+
+              If both are empty:
+              use username
+
+              If username is also unavailable:
+              show "Unnamed Customer"
+            */
+                const customerName =
+                  `${user.first_name || ""} ${user.last_name || ""}`.trim() ||
+                  user.username ||
+                  "Unnamed Customer";
+
+                /*
+              Get the first letter for the circular avatar.
+
+              Example:
+              Ali Ahmed -> A
+            */
+                const avatarLetter = customerName.charAt(0).toUpperCase();
+
+                return (
+                  <tr key={user.id}>
+                    {/* CUSTOMER ID */}
+                    <td>
+                      <span className="customer-id-badge">#{user.id}</span>
+                    </td>
+
+                    {/* CUSTOMER AVATAR + NAME */}
+                    <td>
+                      <div className="customer-info">
+                        <div className="customer-avatar">{avatarLetter}</div>
+
+                        <span className="customer-name">{customerName}</span>
+                      </div>
+                    </td>
+
+                    {/* EMAIL */}
+                    <td>
+                      <span className="customer-email">{user.email}</span>
+                    </td>
+
+                    {/* ACTION BUTTONS */}
+                    <td>
+                      <div className="customer-actions">
+                        {/* EDIT */}
+                        <button
+                          className="customer-action-btn edit-customer-btn"
+                          onClick={() => {
+                            setEditUser(user);
+
+                            setFormData({
+                              first_name: user.first_name || "",
+                              last_name: user.last_name || "",
+                              email: user.email || "",
+                            });
+                          }}
+                        >
+                          Edit
+                        </button>
+
+                        {/* DELETE */}
+                        <button
+                          className="customer-action-btn delete-customer-btn"
+                          onClick={() => {
+                            handleDelete(user);
+                          }}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })
+            ) : (
+              /*
+            This is the empty state.
+
+            It appears when:
+            - there are no customers
+            - the search finds no matching customer
+          */
+              <tr>
+                <td colSpan="4">
+                  <div className="customers-empty-state">
+                    <h3>No customers found</h3>
+
+                    <p>Try changing your search or check again later.</p>
+                  </div>
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* ================= EDIT MODAL ================= */}
+
       {editUser && (
         <div className="modal-backdrop-custom">
-          <div className="modal-box">
+          <div className="modal-box customer-modal">
+            <div className="modal-header">
+              <div>
+                <h4>Edit Customer</h4>
 
-            <h4>Edit Customer</h4>
+                <p>Update the customer's account information.</p>
+              </div>
 
-            <input
-              className="form-control mb-2"
-              placeholder="First Name"
-              value={formData.first_name}
-              onChange={(e) =>
-                setFormData({ ...formData, first_name: e.target.value })
-              }
-            />
+              <button
+                className="modal-close-btn"
+                onClick={() => setEditUser(null)}
+              >
+                ×
+              </button>
+            </div>
 
-            <input
-              className="form-control mb-2"
-              placeholder="Last Name"
-              value={formData.last_name}
-              onChange={(e) =>
-                setFormData({ ...formData, last_name: e.target.value })
-              }
-            />
+            <div className="modal-form">
+              <label>First Name</label>
 
-            <input
-              className="form-control mb-3"
-              placeholder="Email"
-              value={formData.email}
-              onChange={(e) =>
-                setFormData({ ...formData, email: e.target.value })
-              }
-            />
+              <input
+                placeholder="Enter first name"
+                value={formData.first_name}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    first_name: e.target.value,
+                  })
+                }
+              />
 
-            <button className="btn btn-success me-2" onClick={handleUpdate}>
-              Save
-            </button>
+              <label>Last Name</label>
 
-            <button
-              className="btn btn-secondary"
-              onClick={() => setEditUser(null)}
-            >
-              Cancel
-            </button>
+              <input
+                placeholder="Enter last name"
+                value={formData.last_name}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    last_name: e.target.value,
+                  })
+                }
+              />
 
+              <label>Email Address</label>
+
+              <input
+                type="email"
+                placeholder="Enter email"
+                value={formData.email}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    email: e.target.value,
+                  })
+                }
+              />
+            </div>
+
+            <div className="modal-actions">
+              <button
+                className="modal-cancel-btn"
+                onClick={() => setEditUser(null)}
+              >
+                Cancel
+              </button>
+
+              <button className="modal-save-btn" onClick={handleUpdate}>
+                Save Changes
+              </button>
+            </div>
           </div>
         </div>
       )}
 
-      {/* ---------------- DELETE MODAL ---------------- */}
-      {deleteUser && (
-        <div className="modal-backdrop-custom">
-          <div className="modal-box text-center">
-
-            <h4>Delete Customer?</h4>
-            <p>Are you sure you want to delete <b>{deleteUser.username}</b>?</p>
-
-            <button
-              className="btn btn-danger me-2"
-              onClick={handleDelete}
-            >
-              Yes, Delete
-            </button>
-
-            <button
-              className="btn btn-secondary"
-              onClick={() => setDeleteUser(null)}
-            >
-              Cancel
-            </button>
-
-          </div>
-        </div>
+      {showSnackBar && pendingDeleteUser && (
+        <SnackBar
+          message={`${pendingDeleteUser.first_name} ${pendingDeleteUser.last_name}`}
+          onUndo={undoDelete}
+        />
       )}
 
-      {/* ---------------- CSS ---------------- */}
-      <style>{`
-        .modal-backdrop-custom {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: rgba(0,0,0,0.6);
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          z-index: 999;
-        }
+      {/* ================= PAGINATION ================= */}
 
-        .modal-box {
-          background: #1e1e1e;
-          padding: 20px;
-          border-radius: 10px;
-          width: 400px;
-          color: white;
-        }
-      `}</style>
+      <div className="customers-pagination">
+        <button
+          className="pagination-btn"
+          disabled={currentPage === 1}
+          onClick={() => setCurrentPage((previousPage) => previousPage - 1)}
+        >
+          ← Previous
+        </button>
 
+        <div className="page-indicator">
+          <span>Page</span>
+
+          <strong>{currentPage}</strong>
+
+          <span>of {totalPages}</span>
+        </div>
+
+        <button
+          className="pagination-btn"
+          disabled={currentPage === totalPages}
+          onClick={() => setCurrentPage((previousPage) => previousPage + 1)}
+        >
+          Next →
+        </button>
+      </div>
     </div>
   );
 }

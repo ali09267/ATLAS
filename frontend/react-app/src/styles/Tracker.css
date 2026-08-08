@@ -1,0 +1,278 @@
+/* ===========================
+   Tracker Page
+=========================== */
+
+.tracker-container {
+  max-width: 950px;
+  margin: 40px auto;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.tracker-title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #4f7cff;
+  margin-bottom: 30px;
+}
+
+/* ===========================
+   Order Card
+=========================== */
+
+.order-card {
+  background: #f7f9fc;
+  border-radius: 15px;
+  padding: 25px;
+  margin-bottom: 40px;
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.order-id {
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #4f7cff;
+}
+
+.order-status {
+  background: #4f7cff;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 30px;
+  font-weight: bold;
+}
+
+.order-info {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 15px;
+}
+
+.order-info p {
+  margin: 0;
+}
+
+/* ===========================
+   Timeline
+=========================== */
+
+.timeline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 45px 0;
+  position: relative;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: #d4d9e2;
+  top: 22px;
+  z-index: 0;
+}
+
+.step {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.circle {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: #cfd8e6;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.circle.active {
+  background: #4f7cff;
+}
+
+.circle.current {
+  background: #2858ff;
+  transform: scale(1.15);
+  box-shadow: 0 0 10px rgba(79, 124, 255, 0.5);
+}
+
+.step-label {
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* ===========================
+   Products
+=========================== */
+
+.product-list {
+  margin-top: 35px;
+}
+
+.product-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 18px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.product-card img {
+  width: 85px;
+  height: 85px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.product-details {
+  flex: 1;
+}
+
+.product-details h5 {
+  margin-bottom: 8px;
+}
+
+.product-details p {
+  margin: 4px 0;
+}
+
+/* ===========================
+   Total
+=========================== */
+
+.order-total {
+  margin-top: 30px;
+  text-align: right;
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #2858ff;
+}
+
+/* ===========================
+   AI Button
+=========================== */
+
+.ai-btn {
+  margin-top: 35px;
+  display: block;
+  width: 220px;
+  margin-left: auto;
+  margin-right: auto;
+  background: #4f7cff;
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.ai-btn:hover {
+  background: #2858ff;
+}
+
+/* ===========================
+   Empty State
+=========================== */
+
+.tracker-empty {
+  max-width: 700px;
+  margin: 60px auto;
+  background: white;
+  border-radius: 18px;
+  padding: 60px 30px;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.tracker-empty h2 {
+  color: #4f7cff;
+  margin-top: 20px;
+}
+
+.tracker-empty p {
+  color: #666;
+  margin: 15px 0 30px;
+}
+
+.empty-icon {
+  font-size: 5rem;
+}
+
+/* ===========================
+   Cancelled
+=========================== */
+
+.tracker-cancelled {
+  max-width: 700px;
+  margin: 60px auto;
+  text-align: center;
+  background: #fff5f5;
+  border: 2px solid #ffb3b3;
+  border-radius: 18px;
+  padding: 60px 30px;
+}
+
+.tracker-cancelled h2 {
+  color: #dc2626;
+}
+
+.tracker-cancelled p {
+  color: #666;
+}
+
+/* ===========================
+   Responsive
+=========================== */
+
+@media (max-width: 768px) {
+  .timeline {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .timeline::before {
+    display: none;
+  }
+
+  .order-header {
+    flex-direction: column;
+  }
+
+  .order-total {
+    text-align: center;
+  }
+
+  .product-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .product-card img {
+    width: 120px;
+    height: 120px;
+  }
+}

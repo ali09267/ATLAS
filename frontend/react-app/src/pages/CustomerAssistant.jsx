@@ -7,27 +7,41 @@ import ProductGrid from "../components/ProductGrid";
 import OrdersList from "../components/OrdersList";
 
 function CustomerAssistant() {
-  const { user } = useAuth();
+  const { user } = useAuth(); //getting curr logged in user
 
-  const [question, setQuestion] = useState("");
+  const [question, setQuestion] = useState(""); //update user Qs
 
-  const [messages, setMessages] = useState([
-    {
-      sender: "ai",
-      text: `Hello ${user?.first_name || "there"} 👋
+  const initialMsg = {
+    sender: "ai",
+    text: `Hello ${user?.first_name || "there"} 👋
 I'm your AI Store Assistant.
 Ask me anything about your products, orders or account.`,
-    },
-  ]);
+  };
 
-  const bottomRef = useRef(null);
+  const [messages, setMessages] = useState(() => {
+    const savedMsgs = localStorage.getItem("chat_history");
+    if (savedMsgs) {
+      return JSON.parse(savedMsgs);
+    }
+    return [initialMsg];
+  });
+  const bottomRef = useRef(null); //at the bottomist by default
 
   useEffect(() => {
+    // Scroll to latest message
     bottomRef.current?.scrollIntoView({
       behavior: "smooth",
     });
+
+    // Save chat history
+    localStorage.setItem("chat_history", JSON.stringify(messages));
+    console.log("MY HISTORY ", localStorage.getItem("chat_history"));
   }, [messages]);
 
+  const clearHistory = () => {
+    localStorage.removeItem("chat_history"); //deletes saved chat
+    setMessages([initialMsg]); //display greetings anyways
+  };
   const handleSendMessage = async () => {
     if (!question.trim()) return;
 
@@ -63,7 +77,6 @@ Ask me anything about your products, orders or account.`,
         sender: "ai",
         type: data.type,
       };
-      console.log(data);
       switch (data.type) {
         case "chat":
           aiMessage.text = data.message;
@@ -108,9 +121,20 @@ Ask me anything about your products, orders or account.`,
 
   return (
     <div className="ai-page">
-      <h1 className="ai-title">AI Assistant</h1>
+      <div className="assistant-header">
+        <div className="assistant-text">
+          <h1 className="ai-title">AI Assistant</h1>
 
-      <p className="ai-subtitle">Your intelligent shopping assistant</p>
+          <p className="ai-subtitle">Your intelligent shopping assistant</p>
+        </div>
+
+        <button
+          className="btn btn-primary clear-history-btn"
+          onClick={clearHistory}
+        >
+          Clear History
+        </button>
+      </div>
 
       {user ? (
         <>
@@ -132,20 +156,6 @@ Ask me anything about your products, orders or account.`,
                   }
                 >
                   {message.text && <p>{message.text}</p>}
-
-                  {message.categories && (
-                    <div className="available-categories">
-                      <p className="category-heading">
-                        Following are the available categories at our store:-
-                      </p>
-
-                      <ul className="category-list">
-                        {message.categories.map((category, index) => (
-                          <li key={index}>{category}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
 
                   {message.type === "table" && (
                     <AnalyticsTable data={message.data} />

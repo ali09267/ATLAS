@@ -1,0 +1,209 @@
+.atlas-home {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  isolation: isolate;
+  padding: 1px 0 55px;
+  color: #f4f0ff;
+  background:
+    radial-gradient(
+      circle at 50% -10%,
+      rgba(86, 52, 170, 0.27),
+      transparent 38%
+    ),
+    radial-gradient(
+      circle at 0% 60%,
+      rgba(25, 71, 154, 0.16),
+      transparent 35%
+    ),
+    linear-gradient(
+      135deg,
+      #05060c 0%,
+      #09091a 30%,
+      #120d2b 65%,
+      #070711 100%
+    );
+}
+
+.home-content {
+  position: relative;
+  z-index: 3;
+}
+
+.home-glow {
+  position: fixed;
+  z-index: -1;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  filter: blur(150px);
+  opacity: 0.2;
+  pointer-events: none;
+  animation: homeGlowFloat 12s ease-in-out infinite;
+}
+
+.home-glow-purple {
+  top: 8%;
+  right: -260px;
+  background: #743ed8;
+}
+
+.home-glow-blue {
+  bottom: 2%;
+  left: -270px;
+  background: #245fc5;
+  animation-delay: -5s;
+}
+
+@keyframes homeGlowFloat {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate(-35px, 30px) scale(1.08);
+  }
+}
+
+.home-dots {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.home-dots span {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(174, 142, 255, 0.52);
+  box-shadow: 0 0 8px rgba(126, 76, 255, 0.75);
+  animation: floatingDot 11s ease-in-out infinite;
+}
+
+@keyframes floatingDot {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+
+    opacity: 0.25;
+  }
+
+  50% {
+    transform: translate(18px, -25px) scale(1.8);
+
+    opacity: 0.85;
+  }
+}
+
+.home-search-section {
+  position: relative;
+  padding: 15px 0 30px;
+}
+
+.home-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 15px 0 26px;
+}
+
+.home-section-heading span {
+  display: block;
+  margin-bottom: 5px;
+  color: #a87cff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 3px;
+}
+
+.home-section-heading h3 {
+  margin: 0;
+  color: #f4f0ff;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 30px;
+  font-weight: 500;
+}
+
+.home-empty-result {
+  width: 100%;
+  margin: 20px 12px;
+  padding: 55px 20px;
+  border: 1px solid rgba(159, 124, 230, 0.16);
+  border-radius: 20px;
+  text-align: center;
+  background: rgba(28, 20, 54, 0.55);
+  backdrop-filter: blur(14px);
+}
+
+.home-empty-result > div {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 15px;
+  border-radius: 16px;
+  color: #c8a8ff;
+  font-size: 29px;
+  background: rgba(115, 70, 200, 0.2);
+}
+
+.home-empty-result h4 {
+  margin: 0 0 7px;
+  color: #eee8ff;
+  font-family: Georgia, serif;
+}
+
+.home-empty-result p {
+  margin: 0;
+  color: rgba(216, 202, 241, 0.5);
+  font-size: 13px;
+}
+
+.atlas-home .carousel {
+  animation: homeSectionAppear 0.65s ease-out both;
+}
+
+@keyframes homeSectionAppear {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .atlas-home {
+    padding-bottom: 35px;
+  }
+
+  .home-glow {
+    width: 350px;
+    height: 350px;
+  }
+
+  .home-section-heading h3 {
+    font-size: 25px;
+  }
+
+  .home-dots span {
+    width: 3px;
+    height: 3px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-glow,
+  .home-dots span,
+  .atlas-home .carousel {
+    animation: none;
+  }
+}

@@ -8,16 +8,16 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
     const saved = localStorage.getItem("user");
 
-if (!saved || saved === "undefined") {
-  return null;
-}
+    if (!saved || saved === "undefined") {
+      return null;
+    }
 
-try {
-  return JSON.parse(saved);
-} catch (error) {
-  localStorage.removeItem("user");
-  return null;
-}//if get saved data (user's logged in info: otherwise return null)
+    try {
+      return JSON.parse(saved);
+    } catch (error) {
+      localStorage.removeItem("user");
+      return null;
+    } //if get saved data (user's logged in info: otherwise return null)
   });
 
   const login = (userData) => {
@@ -27,10 +27,9 @@ try {
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem("user");//remove user's info: from memory
+    localStorage.removeItem("user"); //remove user's info: from memory
   };
 
- 
   return (
     <AuthContext.Provider value={{ user, login, logout }}>
       {children}

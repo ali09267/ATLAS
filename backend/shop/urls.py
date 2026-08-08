@@ -16,6 +16,7 @@ from .views.product_views import (
     products,
     recommended_products,
     search_products,
+    get_all_products,
 )
 from .views.page_views import (
     checkout,
@@ -28,7 +29,12 @@ from .views.notification_views import (
     save_device_token,
     track_view,
 )
-from .views.order_views import get_orders, update_order_status, create_order
+from .views.order_views import (
+    get_orders,
+    update_order_status,
+    create_order,
+    latest_order,
+)
 
 # map of our project, which path to follow for which view with optional name parameter
 # path("actual path/url/link","view.function_name",name="optional_name")
@@ -64,4 +70,6 @@ urlpatterns = [
         "api/ai-query/",
         ai_query,
     ),
+    path("api/products/all/", get_all_products, name="get_all_products"),
+    path("api/orders/latest/", latest_order),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

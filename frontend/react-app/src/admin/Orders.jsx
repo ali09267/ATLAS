@@ -3,15 +3,50 @@ import "../styles/Orders.css";
 
 function Orders() {
   const [orders, setOrders] = useState([]);
+  const [search, setSearch] = useState("");
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const [totalPages, setTotalPages] = useState(1);
+
+  const fetchOrders = async (page = 1, searchValue = "") => {
+    try {
+      const params = new URLSearchParams({
+        page: page,
+      });
+
+      if (searchValue.trim()) {
+        params.append("search", searchValue.trim());
+      }
+
+      const response = await fetch(
+        `http://127.0.0.1:8000/shop/api/orders/?${params.toString()}`,
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch orders");
+      }
+
+      const data = await response.json();
+
+      console.log("Fetched order data:", data);
+
+      setOrders(data.results || []);
+
+      setTotalPages(data.total_pages || 1);
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+    }
+  };
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/shop/api/orders/")
-      .then((res) => res.json())
-      .then((data) => {
-        setOrders(data);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+    fetchOrders(currentPage, search);
+  }, [currentPage, search]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search]);
+
   const handleStatusChange = (id, status) => {
     setOrders((prevOrders) =>
       prevOrders.map((order) =>
@@ -69,10 +104,12 @@ function Orders() {
             {orders.length > 0 ? (
               orders.map((order) => (
                 <tr key={order.id}>
+                  {/* Order ID */}
                   <td>
                     <span className="order-id">#{order.id}</span>
                   </td>
 
+                  {/* Customer */}
                   <td>
                     <div className="customer-info">
                       <div className="customer-avatar">
@@ -83,16 +120,17 @@ function Orders() {
                     </div>
                   </td>
 
+                  {/* Ordered Products */}
                   <td>
                     <div className="products-dropdown">
                       <button className="products-btn">
-                        {order.items.length} Products ▼
+                        {order.items?.length || 0} Products ▼
                       </button>
 
                       <div className="products-menu">
-                        {order.items.map((item) => (
+                        {order.items?.map((item, index) => (
                           <div
-                            key={`${order.id}-${item.product_name}`}
+                            key={`${order.id}-${index}`}
                             className="product-row"
                           >
                             <div className="product-name">
@@ -100,7 +138,7 @@ function Orders() {
                             </div>
 
                             <div className="product-details">
-                              Qty : {item.quantity}
+                              Qty: {item.quantity}
                               {item.price && (
                                 <>
                                   <br />
@@ -114,10 +152,14 @@ function Orders() {
                     </div>
                   </td>
 
+                  {/* Number of Items */}
                   <td>
-                    <span className="items-badge">{order.items.length}</span>
+                    <span className="items-badge">
+                      {order.items?.length || 0}
+                    </span>
                   </td>
 
+                  {/* Status */}
                   <td>
                     <select
                       className={`status-select ${order.status
@@ -129,12 +171,16 @@ function Orders() {
                       }
                     >
                       <option value="PENDING">Pending</option>
+
                       <option value="SHIPPED">Rider Out For Delivery</option>
-                      <option value="CONFIRMED">Delivered</option>
+
+                      <option value="DELIVERED">Delivered</option>
+
                       <option value="CANCELLED">Cancelled</option>
                     </select>
                   </td>
 
+                  {/* Save */}
                   <td>
                     <button
                       className="save-btn"
@@ -154,6 +200,27 @@ function Orders() {
             )}
           </tbody>
         </table>
+        <div className="d-flex justify-content-center align-items-center gap-3 mt-3">
+          <button
+            className="btn btn-primary"
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage((previousPage) => previousPage - 1)}
+          >
+            Previous
+          </button>
+
+          <span>
+            Page {currentPage} of {totalPages}
+          </span>
+
+          <button
+            className="btn btn-primary"
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage((previousPage) => previousPage + 1)}
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -10,7 +10,10 @@ SECRET_KEY = "django-insecure-qer-(ae=w&m9ui8g9m%sc9#yor8okh256e!!!jt9_y8oyoh^ln
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
+]
 
 AUTH_USER_MODEL = "shop.CustomUser"  # replace 'shop' with your app name
 
@@ -107,9 +110,9 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 CORS_ALLOW_CREDENTIALS = True
-SESSION_COOKIE_SAMESITE = "None"  # ← change from 'Lax' to 'None'
+SESSION_COOKIE_SAMESITE = "Lax"  # ← change from 'Lax' to 'None'
 SESSION_COOKIE_SECURE = False  # ← False is fine for local HTTP dev
-CSRF_COOKIE_SAMESITE = "None"  # ← add this
+CSRF_COOKIE_SAMESITE = "Lax"  # ← add this
 CSRF_COOKIE_SECURE = False  # ← add this
 SESSION_COOKIE_HTTPONLY = True
 CSRF_TRUSTED_ORIGINS = [

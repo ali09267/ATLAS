@@ -34,7 +34,7 @@ class Contact(models.Model):
         return self.name
 
 
-class CustomUser(AbstractUser):  # username, first_name, last_name, age, phone, address
+class CustomUser(AbstractUser):
 
     class Roles(models.TextChoices):
         ADMIN = "admin", "Admin"
@@ -46,12 +46,19 @@ class CustomUser(AbstractUser):  # username, first_name, last_name, age, phone, 
         default=Roles.CUSTOMER,
     )
 
+    def __str__(self):
+        full_name = f"{self.first_name} {self.last_name}".strip()
+
+        if full_name:
+            return full_name
+
+        return self.email or self.username
+
 
 class Order(models.Model):
 
     STATUS_CHOICES = [
         ("PENDING", "Pending"),
-        ("CONFIRMED", "Confirmed"),
         ("SHIPPED", "Shipped"),
         ("DELIVERED", "Delivered"),
         ("CANCELLED", "Cancelled"),

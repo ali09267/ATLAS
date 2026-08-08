@@ -1,3 +1,5 @@
+import { useAuth } from "./auth/AuthContext";
+import { useNavigate, useLocation } from "react-router-dom";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CartProvider } from "./cart/Cart_Content";
 import { useState, useEffect } from "react";
@@ -24,6 +26,8 @@ import AIAssistant from "./admin/AIAssistant";
 import CustomerAssistant from "./pages/CustomerAssistant";
 import Notifications from "./pages/Notification";
 import NotificationsPermission from "./main_component/NotificationPermission";
+import AdminRoute from "./auth/AdminRoute";
+
 function App() {
   const [userEmail, setUserEmail] = useState(localStorage.getItem("userEmail"));
   const [allProducts, setAllProducts] = useState([]);
@@ -31,7 +35,7 @@ function App() {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:8000/shop/api/products/") //api from which our products data will come from
+    fetch("http://localhost:8000/shop/api/products/all") //api from which our products data will come from
       .then((res) => res.json())
       .then((data) => {
         const categoryMap = {}; // Group products by category
@@ -87,6 +91,7 @@ function App() {
       <AuthProvider>
         <BrowserRouter>
           <NotificationsPermission />
+
           <Routes>
             {/* USER SIDE */}
             <Route
@@ -113,14 +118,19 @@ function App() {
             <Route path="/register" element={<Register />} />
 
             {/* ADMIN SIDE */}
-            <Route element={<AdminLayout />}>
-              <Route path="/admin/dashboard" element={<Dashboard />} />
-              <Route path="/admin/products" element={<Products />} />
-              <Route path="/admin/customers" element={<Customers />} />
-              <Route path="/admin/orders" element={<Orders />} />
+            <Route element={<AdminRoute />}>
+              <Route element={<AdminLayout />}>
+                <Route path="/admin/dashboard" element={<Dashboard />} />
+                <Route path="/admin/products" element={<Products />} />
+                <Route path="/admin/customers" element={<Customers />} />
+                <Route path="/admin/orders" element={<Orders />} />
 
-              <Route path="/admin/notifications" element={<Notifications />} />
-              <Route path="/admin/ai" element={<AIAssistant />} />
+                <Route
+                  path="/admin/notifications"
+                  element={<Notifications />}
+                />
+                <Route path="/admin/ai" element={<AIAssistant />} />
+              </Route>
             </Route>
           </Routes>
         </BrowserRouter>

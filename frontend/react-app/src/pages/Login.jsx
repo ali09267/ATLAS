@@ -1,7 +1,9 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '../auth/AuthContext' 
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
+import { useAuth } from "../auth/AuthContext";
+
+import "../styles/Login.css";
 
 function getCookie(name) {
   let cookieValue = null;
@@ -9,95 +11,178 @@ function getCookie(name) {
   if (document.cookie && document.cookie !== "") {
     document.cookie.split(";").forEach((cookie) => {
       cookie = cookie.trim();
+
       if (cookie.startsWith(name + "=")) {
         cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
       }
     });
   }
+
   return cookieValue;
 }
 
 function Login() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const navigate = useNavigate()
-   const { login } = useAuth() 
+  const [email, setEmail] = useState("");
+
+  const [password, setPassword] = useState("");
+
+  const [error, setError] = useState("");
+
+  const navigate = useNavigate();
+
+  const { login } = useAuth();
 
   const handleLogin = async (e) => {
-    e.preventDefault()
-   
-    const res = await fetch('http://localhost:8000/shop/api/login/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json','X-CSRFToken': getCookie('csrftoken'), },
-      credentials:'include',
-      body: JSON.stringify({ email, password })
-    })
+    e.preventDefault();
 
-    const data = await res.json()
+    setError("");
 
-    if (res.ok) {
-    localStorage.setItem('token', data.token);
-    localStorage.setItem("token", data.token);
+    try {
+      const res = await fetch("http://localhost:8000/shop/api/login/", {
+        method: "POST",
 
-login(data);   // update AuthContext
+        headers: {
+          "Content-Type": "application/json",
 
-if (data.role === "admin") {
-    navigate("/admin/dashboard");
-} else {
-    navigate("/");
-}
-  } 
-    else {
-      setError(data.error)
+          "X-CSRFToken": getCookie("csrftoken"),
+        },
+
+        credentials: "include",
+
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        localStorage.setItem("token", data.token);
+
+        login(data);
+
+        if (data.role === "admin") {
+          navigate("/admin/dashboard");
+        } else {
+          navigate("/");
+        }
+      } else {
+        setError(data.error || "Invalid email or password.");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+
+      setError("Unable to connect to the server. Please try again.");
     }
-  }
+  };
 
   return (
-    <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
-      <div className="card p-4" style={{ width: '400px' }}>
-        <h3 className="text-center mb-4">Login</h3>
+    <main className="login-page">
+      {/* Decorative background */}
+      <div className="login-glow login-glow-one"></div>
 
-        {error && <div className="alert alert-danger">{error}</div>}
+      <div className="login-glow login-glow-two"></div>
 
-        <form onSubmit={handleLogin}>
-          <div className="mb-3">
-            <label>Email</label>
-            <input type="email" className="form-control email"
-              value={email}  onChange={e => setEmail(e.target.value)} required />
-          </div>
-          <div className="mb-3">
-            <label>Password</label>
-            <input type="password" className="form-control password"
-              value={password} onChange={e => setPassword(e.target.value)} required />
-            <div className="text-start mt-2">
-              <small><a href="#" style={{textDecoration:"none",color:"#9b9ea3"}}   onMouseEnter={e => {
-        e.target.style.color = "#f7f7f7"
-        e.target.style.textDecoration = "none"
-      }}
-      onMouseLeave={e => {
-        e.target.style.color = "#87898c"
-        e.target.style.textDecoration = "none"
-      }}>Forgot Password?</a></small>
+      <div className="login-stars"></div>
+
+      <section className="login-wrapper">
+        {/* Alacena icon */}
+        <div className="login-logo">
+          <span>A</span>
+        </div>
+
+        {/* Heading */}
+        <header className="login-heading">
+          <h1>Welcome Back</h1>
+
+          <p>
+            Sign in to continue your
+            <span>Alacena</span>
+            journey
+          </p>
+        </header>
+
+        {/* Login card */}
+        <div className="login-card">
+          {error && (
+            <div className="login-error">
+              <span>!</span>
+
+              {error}
             </div>
-          </div>
-          <button type="submit" className="btn btn-primary w-100">Login</button>
-        </form>
+          )}
 
-        <p className="text-center mt-3">
-          Don't have an account? <Link to="/register" style={{ textDecoration: "none", color: "#87898c" }}
-    onMouseEnter={e => {
-      e.target.style.color = "#f7f7f7"
-      e.target.style.textDecoration = "none"
-    }}
-    onMouseLeave={e => {
-      e.target.style.color = "#87898c"
-      e.target.style.textDecoration = "none"
-    }}>Sign Up</Link>
+          <form onSubmit={handleLogin}>
+            {/* Email */}
+            <div className="login-field">
+              <label>Email Address</label>
+
+              <div className="login-input-box">
+                <span className="login-input-icon">✉</span>
+
+                <input
+                  type="email"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Password */}
+            <div className="login-field">
+              <div className="login-label-row">
+                <label>Password</label>
+
+                <a
+                  href="#"
+                  className="forgot-password"
+                  onClick={(e) => e.preventDefault()}
+                >
+                  Forgot password?
+                </a>
+              </div>
+
+              <div className="login-input-box">
+                <span className="login-input-icon">🔒</span>
+
+                <input
+                  type="password"
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Login button */}
+            <button type="submit" className="login-button">
+              Sign In
+              <span>→</span>
+            </button>
+          </form>
+
+          {/* Register link */}
+          <div className="login-divider">
+            <span>New to Alacena?</span>
+          </div>
+
+          <p className="login-register-text">
+            Create an account and start exploring
+            <Link to="/register">Create Account</Link>
+          </p>
+        </div>
+
+        <p className="login-security-text">
+          <span>✦</span>
+          Secure access to your ATLAS account
         </p>
-      </div>
-    </div>
-  )
+      </section>
+    </main>
+  );
 }
 
-export default Login
+export default Login;

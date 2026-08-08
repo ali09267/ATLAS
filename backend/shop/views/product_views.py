@@ -12,13 +12,30 @@ from rest_framework.permissions import IsAuthenticated
 from ..models import Product
 from ..serializers import ProductSerializer
 from ..recommendations import get_recommendations
+from shop.pagination import StandardPagination
 
 
 @api_view(["GET"])
 def get_products(request):
-    products = Product.objects.all()
-    serializer = ProductSerializer(products, many=True)
-    return Response(serializer.data)
+
+    search = request.GET.get("search", "").strip()  # what user searches in  search bar
+    products = Product.objects.all().order_by("product_id")  # fetch all products
+
+    if search:  # if user types anything (search bar is not empty)
+        products = products.filter(  # filter those products
+            Q(
+                product_name__icontains=search
+            )  # whose name matches the search(what user types is included in product name)
+            | Q(category__icontains=search)  # or category matches the search
+        )
+
+    paginator = StandardPagination()  # instantiate Product Pagination class
+    page = paginator.paginate_queryset(
+        products, request
+    )  # send products (all products) and request(either prev button, next button, page number etc.)
+    serializer = ProductSerializer(page, many=True)  # serialize just curr page
+
+    return paginator.get_paginated_response(serializer.data)
 
 
 def api_product_detail(request, myid):
@@ -69,16 +86,55 @@ def products(request):
         return Response(serializer.data)
 
 
-@api_view(["PUT"])
+@api_view(["PUT", "DELETE"])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def product_detail(request, id):
-    """NOTE: original version was missing the `id` param and used
-    UserSerializer instead of ProductSerializer - fixed both here."""
-    product = Product.objects.get(product_id=id)
 
-    product.product_name = request.data["product_name"]
-    product.price = request.data["price"]
-    product.save()
-    return Response(ProductSerializer(product).data)
+    try:
+        product = Product.objects.get(product_id=id)
+
+    except Product.DoesNotExist:
+        return Response(
+            {"error": "Product not found"},
+            status=404,
+        )
+
+    # =========================
+    # UPDATE PRODUCT
+    # =========================
+
+    if request.method == "PUT":
+
+        product.product_name = request.data.get(
+            "product_name",
+            product.product_name,
+        )
+
+        product.price = request.data.get(
+            "price",
+            product.price,
+        )
+
+        product.save()
+
+        return Response(
+            ProductSerializer(product).data,
+            status=200,
+        )
+
+    # =========================
+    # DELETE PRODUCT
+    # =========================
+
+    if request.method == "DELETE":
+
+        product.delete()
+
+        return Response(
+            {"message": "Product deleted successfully"},
+            status=200,
+        )
 
 
 @api_view(["GET"])
@@ -87,4 +143,13 @@ def product_detail(request, id):
 def recommended_products(request):
     products = get_recommendations(request.user)
     serializer = ProductSerializer(products, many=True)
+    return Response(serializer.data)
+
+
+@api_view(["GET"])
+def get_all_products(request):
+    products = Product.objects.all().order_by("product_id")
+
+    serializer = ProductSerializer(products, many=True)
+
     return Response(serializer.data)
