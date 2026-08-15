@@ -4,6 +4,8 @@ import "../styles/Confirm.css";
 
 function OrderConfirm() {
   const { orderId } = useParams();
+
+  console.log("Order ID from URL:", orderId);
   const hasFetched = useRef(false);
 
   const formattedId = String(orderId).padStart(5, "0");
@@ -12,18 +14,25 @@ function OrderConfirm() {
   const delivery = new Date();
   delivery.setDate(today.getDate() + 5);
 
-  const fmt = (d) => d.toLocaleDateString("en-PK", { day: "numeric", month: "short", year: "numeric" });
-  const fmtShort = (d) => d.toLocaleDateString("en-PK", { day: "numeric", month: "short" });
+  const fmt = (d) =>
+    d.toLocaleDateString("en-PK", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+  const fmtShort = (d) =>
+    d.toLocaleDateString("en-PK", { day: "numeric", month: "short" });
 
   return (
     <div className="confirm-wrapper">
-
       <div className="check-circle">
         <span className="check-icon">✓</span>
       </div>
 
       <h2 className="confirm-title">Order confirmed!</h2>
-      <p className="confirm-sub">Thank you. Your order has been placed successfully.</p>
+      <p className="confirm-sub">
+        Thank you. Your order has been placed successfully.
+      </p>
 
       <div className="confirm-card">
         <p className="card-label">Order details</p>
@@ -47,7 +56,9 @@ function OrderConfirm() {
 
         <div className="card-row">
           <span>Total</span>
-          <strong>Rs {sessionStorage.getItem("last_order_total") || "—"}</strong>
+          <strong>
+            Rs {sessionStorage.getItem("last_order_total") || "—"}
+          </strong>
         </div>
       </div>
 
@@ -55,12 +66,16 @@ function OrderConfirm() {
         <span className="delivery-icon">🚚</span>
         <div>
           <p className="delivery-title">Estimated delivery</p>
-          <p className="delivery-sub">3–5 business days (by {fmtShort(delivery)})</p>
+          <p className="delivery-sub">
+            3–5 business days (by {fmtShort(delivery)})
+          </p>
         </div>
       </div>
 
       <div className="confirm-actions">
-        <Link to="/" className="btn btn-secondary">← Back to home</Link>
+        <Link to="/" className="btn btn-secondary">
+          ← Back to home
+        </Link>
       </div>
     </div>
   );

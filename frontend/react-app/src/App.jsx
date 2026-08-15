@@ -109,8 +109,11 @@ function App() {
               <Route path="/tracker" element={<Tracker />} />
               <Route path="/ai" element={<CustomerAssistant />} />
               <Route path="/products/:id" element={<ProductDetail />} />
-              <Route path="/checkout" element={<Checkout />} />
-              <Route path="/order-success/:id" element={<Confirm />} />
+              <Route
+                path="/checkout"
+                element={<Checkout allProducts={allProducts} />}
+              />
+              <Route path="/order-success/:orderId" element={<Confirm />} />
             </Route>
 
             {/* AUTH */}

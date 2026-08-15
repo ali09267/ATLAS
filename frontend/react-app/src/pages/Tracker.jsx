@@ -1,127 +1,174 @@
 import { useEffect, useState } from "react";
 import "../styles/Tracker.css";
 import { Link } from "react-router-dom";
-function Tracker() {
-  const [order, setOrder] = useState(null); //display all orders of that particular user
-  const [loading, setLoading] = useState(true); //loader/spinner to show while fetching data from the backend
-  const steps = ["PENDING", "CONFIRMED", "SHIPPED", "DELIVERED"]; //array of order statuses
 
-  //0 if pending, 1 if confirmed, 2 if shipped, 3 if delivered, as we are displaying progress bar based on the order status
+function Tracker() {
+  const [order, setOrder] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const steps = ["PENDING", "CONFIRMED", "SHIPPED", "DELIVERED"];
+
+  // Fetch latest order when page loads
+  useEffect(() => {
+    fetchLatestOrder();
+  }, []);
+
+  // Debug: see order whenever state changes
   useEffect(() => {
     console.log("Current order:", order);
-
-    fetchLatestOrder(); //latest order always on top
-  }, []);
+  }, [order]);
 
   async function fetchLatestOrder() {
     try {
       const token = localStorage.getItem("token");
 
-      const res = await axios.get(
-        "http://127.0.0.1:8000/shop/api/orders/latest/",
-        {
-          headers: {
-            Authorization: `Token ${token}`,
-          },
+      const res = await fetch("http://127.0.0.1:8000/shop/api/orders/latest/", {
+        method: "GET",
+        headers: {
+          Authorization: `Token ${token}`,
         },
-      );
-      console.log("API Response:", res.data);
+      });
 
-      setOrder(res.data);
+      const data = await res.json();
+
+      console.log("API Response:", data);
+
+      setOrder(data);
     } catch (err) {
-      console.log(err);
+      console.log("Error fetching latest order:", err);
     } finally {
       setLoading(false);
     }
   }
 
+  // -------------------------
+  // LOADING STATE
+  // -------------------------
+
   if (loading) {
-    return <h3>Loading...</h3>;
+    return (
+      <div className="tracker-loading">
+        <h3>Loading latest order...</h3>
+      </div>
+    );
   }
+
+  // -------------------------
+  // NO ORDER STATE
+  // -------------------------
+
   if (!order) {
     return (
       <div className="tracker-empty">
-        <div className="empty-icon">📦</div>
+        <div className="tracker-empty-icon">📦</div>
 
         <h2>No Orders Yet</h2>
 
         <p>Looks like you haven't placed any orders yet.</p>
 
-        <Link className="btn btn-primary" to="/">
+        <Link className="tracker-shop-button" to="/">
           Shop Now
         </Link>
       </div>
     );
   }
+
+  // -------------------------
+  // CANCELLED ORDER
+  // -------------------------
+
   if (order.status === "CANCELLED") {
     return (
       <div className="tracker-cancelled">
-        <h2>❌ Order Cancelled</h2>
+        <div className="tracker-cancelled-icon">❌</div>
+
+        <h2>Order Cancelled</h2>
+
         <p>This order has been cancelled.</p>
+
+        <p>Order #{order.id}</p>
+
+        <Link className="tracker-shop-button" to="/">
+          Continue Shopping
+        </Link>
       </div>
     );
   }
+
+  // -------------------------
+  // CURRENT ORDER STATUS
+  // -------------------------
+
   const currentIndex = steps.indexOf(order.status);
 
+  // -------------------------
+  // MAIN TRACKER UI
+  // -------------------------
+
   return (
-    <div>
-      {steps.map((step, index) => (
-        <div key={step}>
-          {/*color those circles which are covered (means index<=currentIndex) and left those which are still to be reached */}
-          <div className={index <= currentIndex ? "circle active" : "circle"} />
+    <div className="tracker-container">
+      <h2 className="tracker-title">Latest Order</h2>
 
-          <p>{step}</p>
-          <h2>Latest Order</h2>
+      {/* Order information */}
+      <div className="tracker-order-card">
+        <div className="tracker-order-header">
+          <h3 className="tracker-order-id">Order #{order.id}</h3>
 
-          <h3>Order #{order.id}</h3>
-
-          <p>Status :{order.status}</p>
-
-          <p>Date :{new Date(order.created_at).toLocaleDateString()}</p>
+          <span className="tracker-order-status">{order.status}</span>
         </div>
-      ))}
 
-      <h2>Latest Order</h2>
+        <div className="tracker-order-info">
+          <p>
+            <strong>Order Date:</strong>{" "}
+            {new Date(order.created_at).toLocaleDateString()}
+          </p>
 
-      <h3>Order #{order.id}</h3>
+          <p>
+            <strong>Total:</strong> Rs. {order.total_price}
+          </p>
+        </div>
+      </div>
 
-      <p>Status :{order.status}</p>
+      {/* Order Progress */}
+      <div className="tracker-timeline">
+        {steps.map((step, index) => (
+          <div className="tracker-step" key={step}>
+            <div
+              className={
+                index <= currentIndex
+                  ? "tracker-circle tracker-circle-active"
+                  : "tracker-circle"
+              }
+            >
+              {index <= currentIndex ? "✓" : ""}
+            </div>
 
-      <p>Date :{new Date(order.created_at).toLocaleDateString()}</p>
-
-      {/* Displaying the products in the order, there img, name, quantity, and price */}
-      {order.items.map((item) => (
-        <div key={item.id} className="tracker-product">
-          <img src={item.image} />
-
-          <div>
-            <h5>{item.product_name}</h5>
-
-            <p>Qty :{item.quantity}</p>
-
-            <p>
-              Rs.
-              {item.price}
-            </p>
+            <p className="tracker-step-label">{step}</p>
           </div>
-        </div>
-      ))}
-      {order.items.map((item) => (
-        <div key={item.id} className="tracker-product">
-          <img src={item.image} />
+        ))}
+      </div>
 
-          <div>
-            <h5>{item.product_name}</h5>
+      {/* Products */}
+      <div className="tracker-products">
+        <h3>Order Items</h3>
 
-            <p>Qty :{item.quantity}</p>
+        {order.items.map((item) => (
+          <div key={item.id} className="tracker-product">
+            <img src={item.image} alt={item.product_name} />
 
-            <p>
-              Rs.
-              {item.price}
-            </p>
+            <div className="tracker-product-details">
+              <h5>{item.product_name}</h5>
+
+              <p>Quantity: {item.quantity}</p>
+
+              <p>Rs. {item.price}</p>
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
+
+      {/* Total */}
+      <div className="tracker-total">Total: Rs. {order.total_price}</div>
     </div>
   );
 }

@@ -8,7 +8,7 @@ const firebaseConfig = {
   storageBucket: "ai-powered-e-commerce-web-app.firebasestorage.app",
   messagingSenderId: "610010101821",
   appId: "1:610010101821:web:ae086659f55bbdd7c0d254",
-  measurementId: "G-0HF1FTNWT6"
+  measurementId: "G-0HF1FTNWT6",
 };
 
 const app = initializeApp(firebaseConfig);

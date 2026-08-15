@@ -113,10 +113,10 @@ function Orders() {
                   <td>
                     <div className="customer-info">
                       <div className="customer-avatar">
-                        {order.user_name?.charAt(0).toUpperCase()}
+                        {order.customer_name?.charAt(0).toUpperCase()}
                       </div>
 
-                      <span>{order.user_name}</span>
+                      <span>{order.customer_name}</span>
                     </div>
                   </td>
 

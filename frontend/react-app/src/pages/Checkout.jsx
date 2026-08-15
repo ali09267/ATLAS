@@ -3,7 +3,7 @@ import { useCart } from "../cart/Cart_Content";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import "../styles/CheckOut.css";
 function Checkout({ allProducts = [] }) {
-  const navigate = useNavigate();//hook
+  const navigate = useNavigate(); //hook
   const { cart } = useCart();
   const productMap = {};
   allProducts.forEach(([title, slides]) => {
@@ -18,43 +18,57 @@ function Checkout({ allProducts = [] }) {
   });
 
   const handleConfirm = async () => {
-     const authCheck = await fetch("http://localhost:8000/shop/api/check-auth/", {
-    credentials: "include",
-  });
-  const authData = await authCheck.json();
-  console.log("Django sees user as:", authData);
-  const token = localStorage.getItem('token') 
+    const authCheck = await fetch(
+      "http://localhost:8000/shop/api/check-auth/",
+      {
+        credentials: "include",
+      },
+    );
+    const authData = await authCheck.json();
+    console.log("totalPrice:", totalPrice);
+    const token = localStorage.getItem("token");
     const response = await fetch(
       "http://localhost:8000/shop/api/create-order/",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Token ${token}`,
+          Authorization: `Token ${token}`,
         },
         credentials: "include",
-        
+
         body: JSON.stringify({
           cart,
           totalPrice,
         }),
-        
       },
     );
 
-    // const data = await response.json();
-
-    // if (data.success) {
-    //   navigate(`/order-success/${data.order_id}`);
-    // }
     const data = await response.json();
 
+    console.log("Create Order Response:", data.total_price);
+
     if (data.success) {
-      navigate(`/order-success/${data.order_id}`); // navigate AFTER success
+      sessionStorage.setItem("last_order_total", data.total_price);
+      console.log("Stored total:", sessionStorage.getItem("last_order_total"));
+      navigate(`/order-success/${data.order_id}`);
     } else {
       alert(data.error || "Order failed");
     }
   };
+
+  console.log("========== CHECKOUT DEBUG ==========");
+  console.log("Cart:", cart);
+  console.log("All Products:", allProducts);
+  console.log("Product Map:", productMap);
+
+  Object.entries(cart).forEach(([id, qty]) => {
+    console.log("Cart Product ID:", id);
+    console.log("Quantity:", qty);
+    console.log("Product from map:", productMap[id]);
+  });
+
+  console.log("====================================");
 
   const totalPrice = Object.entries(cart).reduce((sum, [id, qty]) => {
     const product = productMap[id];

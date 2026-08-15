@@ -5,6 +5,7 @@ from .models import Order
 from .models import OrderItem
 from .models import Notification
 from .models import DeviceToken
+from .models import ContactMessage
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -27,23 +28,45 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
-    product_name = serializers.CharField(source="product.product_name")
+
+    product_name = serializers.CharField(source="product.product_name", read_only=True)
+
+    image = serializers.SerializerMethodField()
 
     class Meta:
         model = OrderItem
-        fields = ["product_name", "quantity"]
+        fields = [
+            "id",
+            "product_name",
+            "image",
+            "quantity",
+            "price",
+        ]
+
+    def get_image(self, obj):
+        if obj.product.image:
+            return f"http://127.0.0.1:8000/media/{obj.product.image}"
+        return ""
 
 
 class OrderSerializer(serializers.ModelSerializer):
-    user_name = serializers.SerializerMethodField()
+
     items = OrderItemSerializer(many=True, read_only=True)
+    customer_name = serializers.SerializerMethodField()
 
     class Meta:
         model = Order
-        fields = ["id", "user_name", "status", "created_at", "items"]
+        fields = [
+            "id",
+            "customer_name",
+            "status",
+            "created_at",
+            "total_price",
+            "items",
+        ]
 
-    def get_user_name(self, obj):
-        return f"{obj.user.first_name} {obj.user.last_name}".strip()
+    def get_customer_name(self, obj):
+        return obj.user.get_full_name() or obj.user.username
 
 
 class NotificationSerializer(serializers.ModelSerializer):
@@ -72,3 +95,22 @@ class DeviceTokenSerializer(serializers.ModelSerializer):
         model = DeviceToken
 
         fields = "__all__"
+
+
+class ContactMessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ContactMessage
+        fields = [
+            "id",
+            "first_name",
+            "last_name",
+            "email",
+            "message",
+            "status",
+            "created_at",
+        ]
+        read_only_fields = [
+            "id",
+            "status",
+            "created_at",
+        ]

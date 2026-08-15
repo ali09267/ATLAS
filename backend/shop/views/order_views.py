@@ -44,6 +44,8 @@ def create_order(request):
     cart = data.get("cart", {})
     total_price = data.get("totalPrice")
 
+    print("total_price:", total_price)
+
     order = Order.objects.create(user=request.user, total_price=total_price)
 
     for product_id, qty in cart.items():
@@ -53,7 +55,9 @@ def create_order(request):
             order=order, product=product, quantity=qty, price=product.price
         )
 
-    return Response({"success": True, "order_id": order.id})
+    return Response(
+        {"success": True, "order_id": order.id, "total_price": order.total_price}
+    )
 
 
 @api_view(["GET"])
@@ -141,10 +145,17 @@ def update_order_status(request, id):
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def latest_order(request):
-    order = Order.objects.filter(user=request.user).order_by("-created_at")
-    print("User Order: ", order)
+
+    order = Order.objects.filter(user=request.user).order_by("-created_at").first()
+
     if not order:
+        print("No orders found for user:", request.user)
         return Response(None)
 
+    print("User Order:", order.total_price)
+
     serializer = OrderSerializer(order)
+
+    print("Serialized Order:", serializer.data)
+
     return Response(serializer.data)

@@ -7,6 +7,10 @@ import { useAuth } from "../auth/AuthContext";
 function NotificationPermission() {
   const { user } = useAuth();
 
+  // ==============================
+  // REGISTER FCM TOKEN
+  // ==============================
+
   useEffect(() => {
     if (!user?.token) return;
 
@@ -34,7 +38,7 @@ function NotificationPermission() {
 
         const token = await getToken(messaging, {
           vapidKey:
-            "BMB5SJVSCn06gXOGIZ2h-iWZ3i5LUNlmTsS7NUcKA6gaUYBTrGAyNKjXKQXfdbBjYyZ1NiC-eGthMjJk_nnUIVk",
+            "BMB5SJVSCn06gXOGIZ2h-iWZ3i5LUNlmTsS7NUcKA6gaUYBTrGAyNKjXKQXfdbBjY1NiC-eGthMjJk_nnUIVk",
 
           serviceWorkerRegistration: registration,
         });
@@ -54,7 +58,6 @@ function NotificationPermission() {
 
             headers: {
               "Content-Type": "application/json",
-
               Authorization: `Token ${user.token}`,
             },
 
@@ -77,7 +80,13 @@ function NotificationPermission() {
     }
 
     setupNotifications();
+  }, [user?.token]);
 
+  // ==============================
+  // FOREGROUND MESSAGES
+  // ==============================
+
+  useEffect(() => {
     const unsubscribe = onMessage(messaging, (payload) => {
       console.log("ATLAS foreground message:", payload);
 
@@ -96,7 +105,7 @@ function NotificationPermission() {
     return () => {
       unsubscribe();
     };
-  }, [user?.token]);
+  }, []);
 
   return null;
 }

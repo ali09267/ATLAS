@@ -18,12 +18,7 @@ from .views.product_views import (
     search_products,
     get_all_products,
 )
-from .views.page_views import (
-    checkout,
-    index,
-    search,
-    tracker,
-)
+from .views.page_views import index, contact, csrf_token
 from .views.notification_views import (
     NotificationListView,
     save_device_token,
@@ -42,9 +37,6 @@ urlpatterns = [
     path("api/products/", get_products),
     path("", index, name="shopHome"),
     path("products/<int:myid>/", products, name="products"),
-    path("search", search, name="search"),
-    path("checkout", checkout, name="checkout"),
-    path("tracker", tracker, name="tracker"),
     path("api/products/<int:myid>/", api_product_detail, name="apiProductDetail"),
     path("api/register/", register),
     path("api/logout/", user_logout),
@@ -72,4 +64,6 @@ urlpatterns = [
     ),
     path("api/products/all/", get_all_products, name="get_all_products"),
     path("api/orders/latest/", latest_order),
+    path("api/contact-us/", contact, name="contact-us"),
+    path("api/csrf/", csrf_token, name="csrf_token"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,6 +1,6 @@
-/* ===========================
-   Tracker Page
-=========================== */
+/* ========================================
+   ATLAS TRACKER PAGE
+======================================== */
 
 .tracker-container {
   max-width: 950px;
@@ -11,268 +11,464 @@
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
 }
 
+/* ========================================
+   PAGE TITLE
+======================================== */
+
 .tracker-title {
   text-align: center;
   font-size: 2rem;
-  font-weight: bold;
+  font-weight: 700;
   color: #4f7cff;
   margin-bottom: 30px;
 }
 
-/* ===========================
-   Order Card
-=========================== */
+/* ========================================
+   LOADING
+======================================== */
 
-.order-card {
+.tracker-loading {
+  min-height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tracker-loading h3 {
+  color: #4f7cff;
+}
+
+/* ========================================
+   ORDER CARD
+======================================== */
+
+.tracker-order-card {
   background: #f7f9fc;
   border-radius: 15px;
   padding: 25px;
   margin-bottom: 40px;
 }
 
-.order-header {
+.tracker-order-header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   flex-wrap: wrap;
-  gap: 20px;
-}
-
-.order-id {
-  font-size: 1.6rem;
-  font-weight: bold;
-  color: #4f7cff;
-}
-
-.order-status {
-  background: #4f7cff;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 30px;
-  font-weight: bold;
-}
-
-.order-info {
-  margin-top: 20px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 15px;
 }
 
-.order-info p {
+.tracker-order-id {
   margin: 0;
-}
-
-/* ===========================
-   Timeline
-=========================== */
-
-.timeline {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 45px 0;
-  position: relative;
-}
-
-.timeline::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 6px;
-  background: #d4d9e2;
-  top: 22px;
-  z-index: 0;
-}
-
-.step {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex: 1;
-}
-
-.circle {
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  background: #cfd8e6;
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: bold;
-  margin-bottom: 12px;
-}
-
-.circle.active {
-  background: #4f7cff;
-}
-
-.circle.current {
-  background: #2858ff;
-  transform: scale(1.15);
-  box-shadow: 0 0 10px rgba(79, 124, 255, 0.5);
-}
-
-.step-label {
-  text-align: center;
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-
-/* ===========================
-   Products
-=========================== */
-
-.product-list {
-  margin-top: 35px;
-}
-
-.product-card {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  padding: 18px 0;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.product-card img {
-  width: 85px;
-  height: 85px;
-  object-fit: cover;
-  border-radius: 12px;
-}
-
-.product-details {
-  flex: 1;
-}
-
-.product-details h5 {
-  margin-bottom: 8px;
-}
-
-.product-details p {
-  margin: 4px 0;
-}
-
-/* ===========================
-   Total
-=========================== */
-
-.order-total {
-  margin-top: 30px;
-  text-align: right;
-  font-size: 1.4rem;
-  font-weight: bold;
-  color: #2858ff;
-}
-
-/* ===========================
-   AI Button
-=========================== */
-
-.ai-btn {
-  margin-top: 35px;
-  display: block;
-  width: 220px;
-  margin-left: auto;
-  margin-right: auto;
-  background: #4f7cff;
-  color: white;
-  border: none;
-  padding: 14px;
-  border-radius: 12px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: 0.3s;
-}
-
-.ai-btn:hover {
-  background: #2858ff;
-}
-
-/* ===========================
-   Empty State
-=========================== */
-
-.tracker-empty {
-  max-width: 700px;
-  margin: 60px auto;
-  background: white;
-  border-radius: 18px;
-  padding: 60px 30px;
-  text-align: center;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-}
-
-.tracker-empty h2 {
   color: #4f7cff;
+  font-size: 1.5rem;
+}
+
+.tracker-order-status {
+  background: #4f7cff;
+  color: #ffffff;
+  padding: 8px 16px;
+  border-radius: 30px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.tracker-order-info {
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
   margin-top: 20px;
 }
 
-.tracker-empty p {
-  color: #666;
-  margin: 15px 0 30px;
+.tracker-order-info p {
+  margin: 0;
+  color: #475569;
 }
 
-.empty-icon {
+/* ========================================
+   ORDER TIMELINE
+======================================== */
+
+.tracker-timeline {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative;
+  margin: 45px 0;
+}
+
+/*
+   The horizontal line behind the circles
+*/
+
+.tracker-timeline::before {
+  content: "";
+  position: absolute;
+
+  top: 22px;
+  left: 10%;
+  right: 10%;
+
+  height: 5px;
+
+  background: #d4d9e2;
+
+  z-index: 0;
+}
+
+/* Individual step */
+
+.tracker-step {
+  position: relative;
+  z-index: 1;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  flex: 1;
+}
+
+/* Circle */
+
+.tracker-circle {
+  width: 45px;
+  height: 45px;
+
+  border-radius: 50%;
+
+  background: #cfd8e6;
+
+  color: #ffffff;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-weight: 700;
+
+  margin-bottom: 10px;
+}
+
+/* Completed circle */
+
+.tracker-circle-active {
+  background: #4f7cff;
+
+  box-shadow: 0 0 0 4px rgba(79, 124, 255, 0.12);
+}
+
+/* Step text */
+
+.tracker-step-label {
+  margin: 0;
+
+  text-align: center;
+
+  font-size: 0.85rem;
+
+  font-weight: 600;
+
+  color: #475569;
+}
+
+/* ========================================
+   PRODUCTS
+======================================== */
+
+.tracker-products {
+  margin-top: 35px;
+}
+
+.tracker-products h3 {
+  margin-bottom: 15px;
+  color: #1e293b;
+}
+
+/* Individual product */
+
+.tracker-product {
+  display: flex;
+
+  align-items: center;
+
+  gap: 20px;
+
+  padding: 18px 0;
+
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* Product image */
+
+.tracker-product img {
+  width: 85px;
+  height: 85px;
+
+  object-fit: cover;
+
+  border-radius: 12px;
+}
+
+/* Product information */
+
+.tracker-product-details {
+  flex: 1;
+}
+
+.tracker-product-details h5 {
+  margin: 0 0 8px;
+
+  font-size: 1rem;
+
+  color: #1e293b;
+}
+
+.tracker-product-details p {
+  margin: 4px 0;
+
+  color: #64748b;
+}
+
+/* ========================================
+   TOTAL
+======================================== */
+
+.tracker-total {
+  margin-top: 30px;
+
+  text-align: right;
+
+  font-size: 1.4rem;
+
+  font-weight: 700;
+
+  color: #2858ff;
+}
+
+/* ========================================
+   AI BUTTON
+======================================== */
+
+.tracker-ai-button {
+  display: block;
+
+  width: 220px;
+
+  margin: 35px auto 0;
+
+  padding: 14px;
+
+  background: #4f7cff;
+
+  color: #ffffff;
+
+  border: none;
+
+  border-radius: 12px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.3s ease,
+    transform 0.2s ease;
+}
+
+.tracker-ai-button:hover {
+  background: #2858ff;
+
+  transform: translateY(-2px);
+}
+
+/* ========================================
+   EMPTY STATE
+======================================== */
+
+.tracker-empty {
+  max-width: 700px;
+
+  margin: 60px auto;
+
+  padding: 60px 30px;
+
+  text-align: center;
+
+  background: #ffffff;
+
+  border-radius: 18px;
+
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.tracker-empty-icon {
   font-size: 5rem;
 }
 
-/* ===========================
-   Cancelled
-=========================== */
+.tracker-empty h2 {
+  margin-top: 20px;
+
+  color: #4f7cff;
+}
+
+.tracker-empty p {
+  margin: 15px 0 30px;
+
+  color: #64748b;
+}
+
+/* ========================================
+   SHOP BUTTON
+======================================== */
+
+.tracker-shop-button {
+  display: inline-block;
+
+  padding: 12px 25px;
+
+  background: #4f7cff;
+
+  color: #ffffff;
+
+  text-decoration: none;
+
+  border-radius: 10px;
+
+  font-weight: 600;
+
+  transition: background 0.3s ease;
+}
+
+.tracker-shop-button:hover {
+  background: #2858ff;
+
+  color: #ffffff;
+}
+
+/* ========================================
+   CANCELLED ORDER
+======================================== */
 
 .tracker-cancelled {
   max-width: 700px;
+
   margin: 60px auto;
-  text-align: center;
-  background: #fff5f5;
-  border: 2px solid #ffb3b3;
-  border-radius: 18px;
+
   padding: 60px 30px;
+
+  text-align: center;
+
+  background: #fff5f5;
+
+  border: 2px solid #ffb3b3;
+
+  border-radius: 18px;
+
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.tracker-cancelled-icon {
+  font-size: 4rem;
 }
 
 .tracker-cancelled h2 {
+  margin-top: 20px;
+
   color: #dc2626;
 }
 
 .tracker-cancelled p {
-  color: #666;
+  color: #64748b;
 }
 
-/* ===========================
-   Responsive
-=========================== */
+/* ========================================
+   RESPONSIVE
+======================================== */
 
 @media (max-width: 768px) {
-  .timeline {
-    flex-direction: column;
-    gap: 30px;
+  .tracker-container {
+    margin: 20px;
+
+    padding: 20px;
   }
 
-  .timeline::before {
+  /* Timeline becomes vertical */
+
+  .tracker-timeline {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 25px;
+
+    margin-left: 20px;
+  }
+
+  /* Hide horizontal line */
+
+  .tracker-timeline::before {
     display: none;
   }
 
-  .order-header {
-    flex-direction: column;
+  .tracker-step {
+    flex-direction: row;
+
+    gap: 15px;
   }
 
-  .order-total {
+  .tracker-circle {
+    flex-shrink: 0;
+  }
+
+  .tracker-step-label {
+    text-align: left;
+  }
+
+  .tracker-order-header {
+    flex-direction: column;
+
+    align-items: flex-start;
+  }
+
+  .tracker-product {
+    align-items: flex-start;
+  }
+
+  .tracker-product img {
+    width: 70px;
+    height: 70px;
+  }
+
+  .tracker-total {
     text-align: center;
   }
+}
 
-  .product-card {
-    flex-direction: column;
-    text-align: center;
+/* ========================================
+   SMALL MOBILE DEVICES
+======================================== */
+
+@media (max-width: 480px) {
+  .tracker-container {
+    margin: 10px;
+
+    padding: 15px;
   }
 
-  .product-card img {
-    width: 120px;
-    height: 120px;
+  .tracker-title {
+    font-size: 1.6rem;
+  }
+
+  .tracker-order-id {
+    font-size: 1.25rem;
+  }
+
+  .tracker-product {
+    gap: 12px;
+  }
+
+  .tracker-product img {
+    width: 60px;
+    height: 60px;
   }
 }
