@@ -1,199 +1,182 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/Contact.css";
 
 function ContactUs() {
-  function getCookie(name) {
-    let cookieValue = null;
+  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState([]);
+  const [isSending, setIsSending] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-    if (document.cookie && document.cookie !== "") {
-      document.cookie.split(";").forEach((cookie) => {
-        cookie = cookie.trim();
+  const token = localStorage.getItem("token");
 
-        if (cookie.startsWith(name + "=")) {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-        }
-      });
-    }
+  const formatTime = (dateString) => {
+    if (!dateString) return "";
 
-    return cookieValue;
-  }
+    const date = new Date(dateString);
 
-  const [formData, setFormData] = useState({
-    first_name: "",
-    last_name: "",
-    email: "",
-    message: "",
-  });
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-
-  useEffect(() => {
-    fetch("/shop/api/csrf/");
-  }, []);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    return date.toLocaleTimeString([], {
+      hour: "numeric",
+      minute: "2-digit",
+    });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const response = await fetch("/shop/api/support/messages/", {
+          method: "GET",
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        });
 
-    setSuccessMessage("");
-    setErrorMessage("");
-    setIsSubmitting(true);
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to load messages");
+        }
+
+        setMessages(data.data);
+      } catch (error) {
+        console.error("Fetch support messages error:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (token) {
+      fetchMessages();
+    } else {
+      setIsLoading(false);
+      console.error("No authentication token found.");
+    }
+  }, [token]);
+
+  const handleSend = async () => {
+    const trimmedMessage = message.trim();
+    console.log("My message: ", trimmedMessage);
+    if (!trimmedMessage || isSending) {
+      return;
+    }
+
+    if (!token) {
+      console.error("No authentication token found.");
+      return;
+    }
+
+    setIsSending(true);
 
     try {
-      const response = await fetch("/shop/api/contact-us/", {
+      const response = await fetch("/shop/api/support/messages/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-CSRFToken": getCookie("csrftoken"),
+          Authorization: `Token ${token}`,
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          message: trimmedMessage,
+        }),
       });
+      console.log("SUPPORT TOKEN:", token);
+      console.log("AUTH HEADER:", `Token ${token}`);
 
-      const text = await response.text();
-
-      console.log("Response status:", response.status);
-      console.log("Response text:", text);
-
-      let data = {};
-
-      if (text) {
-        try {
-          data = JSON.parse(text);
-        } catch (error) {
-          console.error("Invalid JSON:", error);
-        }
-      }
+      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(
-          data.detail ||
-            data.message ||
-            `Request failed with status ${response.status}`,
-        );
+        throw new Error(data.message || "Failed to send message");
       }
-      setSuccessMessage(
-        data.message || "Your message has been sent successfully.",
-      );
 
-      setFormData({
-        first_name: "",
-        last_name: "",
-        email: "",
-        message: "",
-      });
+      setMessages((prev) => [...prev, data.data]);
+
+      setMessage("");
     } catch (error) {
-      console.error("Contact form error:", error);
-      setErrorMessage(
-        error.message || "Something went wrong. Please try again.",
-      );
+      console.error("Send message error:", error);
     } finally {
-      setIsSubmitting(false);
+      setIsSending(false);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
     }
   };
 
   return (
     <div className="contact-page">
-      <div className="contact-container">
-        <div className="contact-header">
-          <span className="contact-label">GET IN TOUCH</span>
+      <div className="support-chat">
+        <div className="support-header">
+          <div className="support-avatar">S</div>
 
-          <h1 id="heading">Contact Us</h1>
+          <div className="support-header-info">
+            <h2>Support</h2>
 
-          <p>
-            Have a question, suggestion, or issue? Send us a message and our
-            team will get back to you.
-          </p>
+            <p>Usually replies within a few hours</p>
+          </div>
         </div>
 
-        <div className="contact-card">
-          <form onSubmit={handleSubmit}>
-            {/* First + Last Name */}
-            <div className="contact-row">
-              <div className="contact-field">
-                <label htmlFor="first_name">First Name</label>
+        <div className="support-messages">
+          {isLoading ? (
+            <div className="support-loading">Loading conversation...</div>
+          ) : messages.length === 0 ? (
+            <div className="support-empty">
+              <h3>How can we help?</h3>
 
-                <input
-                  type="text"
-                  id="first_name"
-                  name="first_name"
-                  value={formData.first_name}
-                  onChange={handleChange}
-                  placeholder="Enter your first name"
-                  required
-                />
-              </div>
-
-              <div className="contact-field">
-                <label htmlFor="last_name">Last Name</label>
-
-                <input
-                  type="text"
-                  id="last_name"
-                  name="last_name"
-                  value={formData.last_name}
-                  onChange={handleChange}
-                  placeholder="Enter your last name"
-                  required
-                />
-              </div>
+              <p>
+                Send us a message and our support team will get back to you.
+              </p>
             </div>
+          ) : (
+            messages.map((msg) => {
+              const isCustomer = msg.sender_role === "customer";
 
-            {/* Email */}
-            <div className="contact-field">
-              <label htmlFor="email">Email Address</label>
+              return (
+                <div
+                  key={msg.id}
+                  className={
+                    isCustomer
+                      ? "message customer-message"
+                      : "message admin-message"
+                  }
+                >
+                  <div className="message-bubble">{msg.message}</div>
 
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="Enter your email address"
-                required
-              />
-            </div>
+                  <div className="message-meta">
+                    {isCustomer ? "You" : "Support"}
+                    {" • "}
+                    {formatTime(msg.created_at)}
 
-            {/* Message */}
-            <div className="contact-field">
-              <label htmlFor="message">Message</label>
+                    {isCustomer && (
+                      <span className="message-status">
+                        {msg.read_at ? " ✓✓" : " ✓"}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
 
-              <textarea
-                id="message"
-                name="message"
-                value={formData.message}
-                onChange={handleChange}
-                placeholder="Write your message here..."
-                rows="6"
-                required
-              />
-            </div>
+        <div className="support-input">
+          <textarea
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Type a message..."
+            rows={1}
+            disabled={isSending}
+          />
 
-            {successMessage && (
-              <div className="contact-success">✓ {successMessage}</div>
-            )}
-
-            {errorMessage && (
-              <div className="contact-error">{errorMessage}</div>
-            )}
-
-            <button
-              type="submit"
-              className="contact-submit"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? "Sending..." : "Send Message"}
-            </button>
-          </form>
+          <button
+            type="button"
+            onClick={handleSend}
+            disabled={isSending || !message.trim()}
+            aria-label="Send message"
+          >
+            {isSending ? "..." : "➤"}
+          </button>
         </div>
       </div>
     </div>

@@ -88,6 +88,7 @@ def dispatch(intent, parameters, user, question):
         return last_viewed_product(user)
 
     elif intent == AIIntents.GENERAL_CHATS:
+        print("🔥 GENERAL CHAT CONDITION MATCHED")
         return general_chat(question)
     else:
         return "Intent not recognized"

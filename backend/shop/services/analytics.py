@@ -1,7 +1,7 @@
 # file which contains the analytics services for the shop app such as
 # total customers, total revenue, products analytics etc.
 
-from django.db.models import Count, Sum
+from django.db.models import Sum
 
 from shop.ai.response_formatter import (
     metric,
@@ -14,6 +14,8 @@ from shop.models import (
     OrderItem,
     CustomUser,
 )
+
+from shop.ai.date_utils import normalize_date
 
 
 def total_customers():
@@ -147,12 +149,14 @@ def products_under_category(category):
 
 def orders_between_dates(start_date, end_date):
 
+    start_date = normalize_date(start_date)
+    end_date = normalize_date(end_date)
+
     orders = Order.objects.filter(created_at__date__range=[start_date, end_date])
 
     rows = []
 
     for order in orders:
-
         rows.append(
             [
                 order.id,

@@ -6,7 +6,7 @@ import MetricCard from "../components/MetricCard";
 function AIAssistant() {
   const [question, setQuestion] = useState("");
 
-  const [messages,setMessages] = useState([
+  const [messages, setMessages] = useState([
     {
       sender: "ai",
       text: "Hello Ali 👋\nI'm your AI Store Assistant.\nAsk me anything about your products, customers, orders or revenue.",
@@ -15,59 +15,54 @@ function AIAssistant() {
 
   const handleSendMessage = async () => {
     if (!question.trim()) return;
-    const userQuestion = question;//since we are about to clear the input (question state), we need to store it in a variable
+    const userQuestion = question; //since we are about to clear the input (question state), we need to store it in a variable
 
-    setMessages(prev => [// Add the user's question to all the previous messages
-    ...prev,//represents all the previous messages
-    {
-        sender:"user",//the user is the sender of this message
-        text:userQuestion
-    }
-]);
-setQuestion("");//clear the input field
-try{
-  const token = localStorage.getItem("token");
-  console.log("Token being sent:", token);
+    setMessages((prev) => [
+      // Add the user's question to all the previous messages
+      ...prev, //represents all the previous messages
+      {
+        sender: "user", //the user is the sender of this message
+        text: userQuestion,
+      },
+    ]);
+    setQuestion(""); //clear the input field
+    try {
+      const token = localStorage.getItem("token");
+      console.log("Token being sent:", token);
 
-const response = await fetch(
-    "http://127.0.0.1:8000/shop/api/ai-query/",
-    {
+      const response = await fetch("http://127.0.0.1:8000/shop/api/ai-query/", {
         method: "POST",
 
         headers: {
-            "Content-Type": "application/json",
-            Authorization:`Token ${token}`
+          "Content-Type": "application/json",
+          Authorization: `Token ${token}`,
         },
 
-        body: JSON.stringify({//send the user's question to the backend
-            question: userQuestion
-        })
-    }
-);
+        body: JSON.stringify({
+          //send the user's question to the backend
+          question: userQuestion,
+        }),
+      });
 
-const data = await response.json();
-
-setMessages(prev => [
-    ...prev,
-    {
-        sender: "ai",
-        type: data.type,//the type of the response (text, table, or metric)
-        data: data//actual content it have
-    }
-]);
-}
-catch (error) {
-
-        setMessages(prev => [
-            ...prev,
-            {
-                sender: "ai",
-                text: "Something went wrong."
-            }
-        ]);
-
-        console.error(error);
-
+      const data = await response.json();
+      console.log("AI RESPONSE FROM BACKEND:", data);
+      setMessages((prev) => [
+        ...prev,
+        {
+          sender: "ai",
+          text: data.message || null,
+          type: data.type, //the type of the response (text, table, or metric)
+          data: data, //actual content it have
+        },
+      ]);
+    } catch (error) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          sender: "ai",
+          text: "Something went wrong.",
+        },
+      ]);
     }
   };
 
@@ -86,22 +81,19 @@ catch (error) {
             }
           >
             <div
-    className={
-        message.sender === "user"
-        ? "chat-bubble user-bubble"
-        : "chat-bubble ai-bubble"
-    }
->
+              className={
+                message.sender === "user"
+                  ? "chat-bubble user-bubble"
+                  : "chat-bubble ai-bubble"
+              }
+            >
+              {message.text && <div>{message.text}</div>}
 
-               {message.text}
+              {message.type === "table" && (
+                <AnalyticsTable data={message.data} />
+              )}
 
-    {message.type === "table" && (
-        <AnalyticsTable data={message.data} />
-    )}
-
-    {message.type === "metric" && (
-        <MetricCard data={message.data} />
-    )}
+              {message.type === "metric" && <MetricCard data={message.data} />}
             </div>
           </div>
         ))}

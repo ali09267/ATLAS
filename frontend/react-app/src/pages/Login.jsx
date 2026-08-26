@@ -78,110 +78,101 @@ function Login() {
   };
 
   return (
-    <main className="login-page">
-      {/* Decorative background */}
-      <div className="login-glow login-glow-one"></div>
+    <section className="login-wrapper">
+      {/* Alacena icon */}
+      <div className="login-logo">
+        <span>A</span>
+      </div>
 
-      <div className="login-glow login-glow-two"></div>
+      {/* Heading */}
+      <header className="login-heading">
+        <h1>Welcome Back</h1>
 
-      <div className="login-stars"></div>
+        <p>
+          Sign in to continue your
+          <span>Alacena</span>
+          journey
+        </p>
+      </header>
 
-      <section className="login-wrapper">
-        {/* Alacena icon */}
-        <div className="login-logo">
-          <span>A</span>
-        </div>
+      {/* Login card */}
+      <div className="login-card">
+        {error && (
+          <div className="login-error">
+            <span>!</span>
 
-        {/* Heading */}
-        <header className="login-heading">
-          <h1>Welcome Back</h1>
+            {error}
+          </div>
+        )}
 
-          <p>
-            Sign in to continue your
-            <span>Alacena</span>
-            journey
-          </p>
-        </header>
+        <form onSubmit={handleLogin}>
+          {/* Email */}
+          <div className="login-field">
+            <label>Email Address</label>
 
-        {/* Login card */}
-        <div className="login-card">
-          {error && (
-            <div className="login-error">
-              <span>!</span>
+            <div className="login-input-box">
+              <span className="login-input-icon">✉</span>
 
-              {error}
+              <input
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
             </div>
-          )}
-
-          <form onSubmit={handleLogin}>
-            {/* Email */}
-            <div className="login-field">
-              <label>Email Address</label>
-
-              <div className="login-input-box">
-                <span className="login-input-icon">✉</span>
-
-                <input
-                  type="email"
-                  placeholder="you@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-            </div>
-
-            {/* Password */}
-            <div className="login-field">
-              <div className="login-label-row">
-                <label>Password</label>
-
-                <a
-                  href="#"
-                  className="forgot-password"
-                  onClick={(e) => e.preventDefault()}
-                >
-                  Forgot password?
-                </a>
-              </div>
-
-              <div className="login-input-box">
-                <span className="login-input-icon">🔒</span>
-
-                <input
-                  type="password"
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-              </div>
-            </div>
-
-            {/* Login button */}
-            <button type="submit" className="login-button">
-              Sign In
-              <span>→</span>
-            </button>
-          </form>
-
-          {/* Register link */}
-          <div className="login-divider">
-            <span>New to Alacena?</span>
           </div>
 
-          <p className="login-register-text">
-            Create an account and start exploring
-            <Link to="/register">Create Account</Link>
-          </p>
+          {/* Password */}
+          <div className="login-field">
+            <div className="login-label-row">
+              <label>Password</label>
+
+              <a
+                href="#"
+                className="forgot-password"
+                onClick={(e) => e.preventDefault()}
+              >
+                Forgot password?
+              </a>
+            </div>
+
+            <div className="login-input-box">
+              <span className="login-input-icon">🔒</span>
+
+              <input
+                type="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+          </div>
+
+          {/* Login button */}
+          <button type="submit" className="login-button">
+            Sign In
+            <span>→</span>
+          </button>
+        </form>
+
+        {/* Register link */}
+        <div className="login-divider">
+          <span>New to Alacena?</span>
         </div>
 
-        <p className="login-security-text">
-          <span>✦</span>
-          Secure access to your ATLAS account
+        <p className="login-register-text">
+          Create an account and start exploring
+          <Link to="/register">Create Account</Link>
         </p>
-      </section>
-    </main>
+      </div>
+
+      <p className="login-security-text">
+        <span>✦</span>
+        Secure access to your ATLAS account
+      </p>
+    </section>
   );
 }
 

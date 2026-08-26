@@ -45,117 +45,108 @@ function Register() {
   };
 
   return (
-    <main className="register-page">
-      {/* Background decorative lights */}
-      <div className="register-glow glow-one"></div>
-      <div className="register-glow glow-two"></div>
+    <section className="register-wrapper">
+      {/* Top icon */}
+      <div className="register-logo">
+        <span>✦</span>
+      </div>
 
-      {/* Small background stars */}
-      <div className="register-stars"></div>
+      {/* Heading */}
+      <header className="register-heading">
+        <h1>Alacena</h1>
 
-      <section className="register-wrapper">
-        {/* Top icon */}
-        <div className="register-logo">
-          <span>✦</span>
-        </div>
+        <p>
+          Already have an account?
+          <Link to="/login">Sign in</Link>
+        </p>
+      </header>
 
-        {/* Heading */}
-        <header className="register-heading">
-          <h1>Alacena</h1>
+      {/* Registration card */}
+      <div className="register-card">
+        {error && <div className="register-error">{error}</div>}
 
-          <p>
-            Already have an account?
-            <Link to="/login">Sign in</Link>
-          </p>
-        </header>
-
-        {/* Registration card */}
-        <div className="register-card">
-          {error && <div className="register-error">{error}</div>}
-
-          <form onSubmit={handleRegister}>
-            {/* Names */}
-            <div className="register-name-row">
-              <div className="register-field">
-                <label>First Name</label>
-
-                <input
-                  type="text"
-                  placeholder="Ali Ahmed"
-                  value={first_name}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  required
-                />
-              </div>
-
-              <div className="register-field">
-                <label>Last Name</label>
-
-                <input
-                  type="text"
-                  placeholder="Shaikh"
-                  value={last_name}
-                  onChange={(e) => setLastName(e.target.value)}
-                  required
-                />
-              </div>
-            </div>
-
-            {/* Email */}
+        <form onSubmit={handleRegister}>
+          {/* Names */}
+          <div className="register-name-row">
             <div className="register-field">
-              <label>Email</label>
+              <label>First Name</label>
 
               <input
-                type="email"
-                placeholder="ada@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                type="text"
+                placeholder="Ali Ahmed"
+                value={first_name}
+                onChange={(e) => setFirstName(e.target.value)}
                 required
               />
             </div>
 
-            {/* Password */}
             <div className="register-field">
-              <label>Password</label>
+              <label>Last Name</label>
 
               <input
-                type="password"
-                placeholder="Create a secure password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                type="text"
+                placeholder="Shaikh"
+                value={last_name}
+                onChange={(e) => setLastName(e.target.value)}
                 required
               />
             </div>
+          </div>
 
-            {/* Confirm password */}
-            <div className="register-field">
-              <label>Confirm Password</label>
+          {/* Email */}
+          <div className="register-field">
+            <label>Email</label>
 
-              <input
-                type="password"
-                placeholder="Confirm your password"
-                value={confirm}
-                onChange={(e) => setConfirm(e.target.value)}
-                required
-              />
-            </div>
+            <input
+              type="email"
+              placeholder="ada@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
 
-            {/* Register button */}
-            <button type="submit" className="register-button">
-              Create Account
-              <span>→</span>
-            </button>
-          </form>
+          {/* Password */}
+          <div className="register-field">
+            <label>Password</label>
 
-          <p className="register-footer">
-            By creating an account, you agree to our
-            <span>Terms</span>
-            and
-            <span>Privacy Policy</span>
-          </p>
-        </div>
-      </section>
-    </main>
+            <input
+              type="password"
+              placeholder="Create a secure password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          {/* Confirm password */}
+          <div className="register-field">
+            <label>Confirm Password</label>
+
+            <input
+              type="password"
+              placeholder="Confirm your password"
+              value={confirm}
+              onChange={(e) => setConfirm(e.target.value)}
+              required
+            />
+          </div>
+
+          {/* Register button */}
+          <button type="submit" className="register-button">
+            Create Account
+            <span>→</span>
+          </button>
+        </form>
+
+        <p className="register-footer">
+          By creating an account, you agree to our
+          <span>Terms</span>
+          and
+          <span>Privacy Policy</span>
+        </p>
+      </div>
+    </section>
   );
 }
 

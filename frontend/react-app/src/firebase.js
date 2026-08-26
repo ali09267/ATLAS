@@ -13,4 +13,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
+console.log("Firebase project:", app.options.projectId);
+console.log("Firebase app ID:", app.options.appId);
+
 export const messaging = getMessaging(app);

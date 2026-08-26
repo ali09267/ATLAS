@@ -18,7 +18,7 @@ from .views.product_views import (
     search_products,
     get_all_products,
 )
-from .views.page_views import index, contact, csrf_token
+from .views.page_views import index, csrf_token
 from .views.notification_views import (
     NotificationListView,
     save_device_token,
@@ -30,6 +30,7 @@ from .views.order_views import (
     create_order,
     latest_order,
 )
+from .views.contact_view import contact, send_support_message
 
 # map of our project, which path to follow for which view with optional name parameter
 # path("actual path/url/link","view.function_name",name="optional_name")
@@ -65,5 +66,6 @@ urlpatterns = [
     path("api/products/all/", get_all_products, name="get_all_products"),
     path("api/orders/latest/", latest_order),
     path("api/contact-us/", contact, name="contact-us"),
+    path("api/support/messages/", send_support_message, name="support-messages"),
     path("api/csrf/", csrf_token, name="csrf_token"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

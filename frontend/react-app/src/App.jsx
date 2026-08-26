@@ -1,9 +1,6 @@
-import { useAuth } from "./auth/AuthContext";
-import { useNavigate, useLocation } from "react-router-dom";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CartProvider } from "./cart/Cart_Content";
 import { useState, useEffect } from "react";
-import Navbar from "./main_component/Navbar";
 import Home from "./pages/Home";
 import ProductDetail from "./pages/Product_Detail";
 import About from "./pages/About";
@@ -12,9 +9,7 @@ import Checkout from "./pages/Checkout";
 import Tracker from "./pages/Tracker";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import { Navigate } from "react-router-dom";
 import { AuthProvider } from "./auth/AuthContext";
-import Logout from "./pages/Logout";
 import Confirm from "./pages/Confirm";
 import Dashboard from "./admin/dashboard";
 import UserLayout from "./main_component/UserLayout";
@@ -27,7 +22,7 @@ import CustomerAssistant from "./pages/CustomerAssistant";
 import Notifications from "./pages/Notification";
 import NotificationsPermission from "./main_component/NotificationPermission";
 import AdminRoute from "./auth/AdminRoute";
-
+import AuthLayout from "./main_component/AuthLayout";
 function App() {
   const [userEmail, setUserEmail] = useState(localStorage.getItem("userEmail"));
   const [allProducts, setAllProducts] = useState([]);
@@ -117,8 +112,10 @@ function App() {
             </Route>
 
             {/* AUTH */}
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+            <Route element={<AuthLayout />}>
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+            </Route>
 
             {/* ADMIN SIDE */}
             <Route element={<AdminRoute />}>

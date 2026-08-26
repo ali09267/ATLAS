@@ -1,0 +1,18 @@
+.atlas-auth-layout {
+  position: relative;
+  min-height: 100vh;
+  isolation: isolate;
+  overflow-x: hidden;
+  color: #f4f0ff;
+  background: #05060c;
+}
+
+.atlas-auth-content {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 20px;
+}

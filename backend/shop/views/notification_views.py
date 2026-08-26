@@ -7,6 +7,7 @@ from rest_framework.decorators import (
 from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny
 
 from ..models import (
     Product,
@@ -63,7 +64,7 @@ class NotificationListView(generics.ListAPIView):
 
 @api_view(["POST"])
 @authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def save_device_token(request):
 
     token = request.data.get("token")
@@ -71,13 +72,32 @@ def save_device_token(request):
     if not token:
         return Response({"error": "Token missing"}, status=400)
 
-    device, created = DeviceToken.objects.get_or_create(
-        token=token,
-        defaults={"user": request.user},
+    print("========== SAVE DEVICE TOKEN ==========")
+    print("Received FCM token:", token)
+
+    device, created = DeviceToken.objects.get_or_create(token=token)
+
+    if request.user.is_authenticated:
+
+        print("Authenticated user:", request.user.id)
+        print("User:", request.user.first_name, request.user.last_name)
+
+        if device.user_id != request.user.id:
+            device.user = request.user
+            device.save(update_fields=["user"])
+
+            print("✅ Token associated with user:", request.user.id)
+
+        else:
+            print("✅ Token already belongs to this user")
+
+    else:
+        print("⚠️ Request is unauthenticated")
+
+    return Response(
+        {
+            "message": "Device token saved",
+            "created": created,
+            "user_id": (request.user.id if request.user.is_authenticated else None),
+        }
     )
-
-    if not created and device.user != request.user:
-        device.user = request.user
-        device.save()
-
-    return Response({"message": "Device token saved"})

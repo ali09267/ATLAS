@@ -1,7 +1,8 @@
 .about-page {
-  background: #ffffff;
+  background: transparent;
   color: #222;
   overflow: hidden;
+  padding: 24px 24px 40px;
 }
 
 /* =========================
@@ -9,11 +10,14 @@
 ========================= */
 
 .about-hero {
-  min-height: 520px;
+  min-height: 470px;
   display: flex;
   align-items: center;
   background: linear-gradient(135deg, #0c0438 0%, #160253 55%, #0852b9 100%);
   position: relative;
+  border-radius: 24px;
+  margin-bottom: 24px;
+  overflow: hidden;
 }
 
 .about-hero::after {
@@ -93,13 +97,19 @@
 /* =========================
    COMMON SECTIONS
 ========================= */
-
 .about-section,
 .features-section,
 .technology-section,
 .ai-section,
 .mission-section {
-  padding: 90px 0;
+  padding: 70px 0;
+  margin-bottom: 24px;
+  border-radius: 24px;
+  overflow: hidden;
+}
+
+.about-section {
+  background: rgba(255, 255, 255, 0.96);
 }
 
 .about-two-column {
@@ -290,6 +300,9 @@
   font-weight: 600;
 }
 
+.technology-section {
+  background: rgba(255, 255, 255, 0.96);
+}
 /* =========================
    MISSION
 ========================= */
@@ -304,7 +317,7 @@
   text-align: center;
   background: #ffffff;
   border-radius: 24px;
-  padding: 70px 50px;
+  padding: 55px 45px;
   border: 1px solid #ebebef;
 }
 
@@ -374,5 +387,31 @@
 
   .mission-card {
     padding: 45px 25px;
+  }
+}
+
+@media (max-width: 400px) {
+  .about-hero {
+    min-height: 520px;
+    text-align: center;
+  }
+  .about-section {
+    text-align: center;
+  }
+  .ai-section {
+    text-align: center;
+  }
+
+  .about-hero-content {
+    max-width: 100%;
+  }
+
+  .about-hero p {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .about-hero-btn {
+    margin-top: 4px;
   }
 }

@@ -98,9 +98,8 @@ def update_order_status(request, id):
     print("Order User:", order.user.first_name)
 
     # Get all tokens for this user
-    device_tokens = DeviceToken.objects.filter(user=order.user)
-
-    print("Tokens found:", device_tokens.count())
+    device_tokens = list(DeviceToken.objects.filter(user=order.user))
+    print("Tokens found:", len(device_tokens))
 
     for device in device_tokens:
         print("Sending to:", device.user.first_name)
@@ -130,11 +129,16 @@ def update_order_status(request, id):
 
     for device in device_tokens:
         try:
-            send_push(
+            result = send_push(
                 device.token,
                 title,
                 message,
             )
+
+            if result:
+                print(
+                    f"✅ Notification sent successfully " f"to {device.user.first_name}"
+                )
         except Exception as e:
             print("❌ Notification failed:", e)
 

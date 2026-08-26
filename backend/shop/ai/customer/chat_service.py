@@ -27,9 +27,19 @@ Do not return JSON.
         print(f"Gemini failed: {gemini_error}")
         print("Switching to Groq...")
 
-        response = generate_groq(
-            system_prompt,
-            question,
-        )
+        try:
+            response = generate_groq(
+                system_prompt,
+                question,
+            )
+
+        except Exception as groq_error:
+
+            print(f"Groq failed: {groq_error}")
+
+            return {
+                "type": "chat",
+                "message": "Sorry, the AI service is temporarily unavailable. Please try again shortly.",
+            }
 
     return chat(response)

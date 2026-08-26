@@ -12,8 +12,6 @@ function NotificationPermission() {
   // ==============================
 
   useEffect(() => {
-    if (!user?.token) return;
-
     async function setupNotifications() {
       try {
         let permission = Notification.permission;
@@ -34,11 +32,9 @@ function NotificationPermission() {
 
         await navigator.serviceWorker.ready;
 
-        console.log("Firebase service worker registered:", registration.scope);
-
         const token = await getToken(messaging, {
           vapidKey:
-            "BMB5SJVSCn06gXOGIZ2h-iWZ3i5LUNlmTsS7NUcKA6gaUYBTrGAyNKjXKQXfdbBjY1NiC-eGthMjJk_nnUIVk",
+            "BMB5SJVSCn06gXOGIZ2h-iWZ3i5LUNlmTsS7NUcKA6gaUYBTrGAyNKjXKQXfdbBjYyZ1NiC-eGthMjJk_nnUIVk",
 
           serviceWorkerRegistration: registration,
         });

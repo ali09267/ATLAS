@@ -8,19 +8,12 @@ from django.conf import settings
 class Product(models.Model):
 
     product_id = models.AutoField(primary_key=True)
-
     product_name = models.CharField(max_length=120)
-
     brand = models.CharField(max_length=50, default="")
-
     category = models.CharField(max_length=50, default="")
-
     price = models.IntegerField(default=0)
-
     desc = models.TextField()
-
     specifications = models.JSONField(default=dict)
-
     image = models.ImageField(upload_to="shop/images", default="")
 
 
@@ -135,9 +128,12 @@ class Notification(models.Model):  # CREATE TABLE Notification
 
 
 class DeviceToken(models.Model):
-
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="device_tokens"
+        CustomUser,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="device_tokens",
     )
 
     token = models.TextField(unique=True)
@@ -145,7 +141,9 @@ class DeviceToken(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.user.first_name} - Device"
+        if self.user:
+            return f"{self.user.first_name} - Device"
+        return f"Unassigned Device - {self.token[:10]}"
 
 
 from django.db import models
@@ -173,3 +171,54 @@ class ContactMessage(models.Model):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} - {self.email}"
+
+
+# container that hold messages of particular user like messages of ali, messages of ali2 etc.
+class SupportConversation(models.Model):
+    user = models.OneToOneField(
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name="support_conversation",
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=[
+            ("OPEN", "Open"),
+            ("CLOSED", "Closed"),
+        ],
+        default="OPEN",
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Support Chat - {self.user.username}"
+
+
+# individual text messages
+class SupportMessage(models.Model):
+    conversation = models.ForeignKey(  # belongs to which chat
+        SupportConversation,
+        on_delete=models.CASCADE,
+        related_name="messages",
+    )
+
+    sender = models.ForeignKey(  # who is sender (customer or admin)
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name="support_messages",
+    )
+
+    message = models.TextField()  # actual msg
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    read_at = models.DateTimeField(
+        null=True,
+        blank=True,
+    )
+
+    def __str__(self):
+        return f"{self.sender.username}: {self.message[:30]}"

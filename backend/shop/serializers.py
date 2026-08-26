@@ -6,6 +6,7 @@ from .models import OrderItem
 from .models import Notification
 from .models import DeviceToken
 from .models import ContactMessage
+from .models import SupportMessage
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -114,3 +115,26 @@ class ContactMessageSerializer(serializers.ModelSerializer):
             "status",
             "created_at",
         ]
+
+
+class SupportMessageSerializer(serializers.ModelSerializer):
+
+    sender_name = serializers.SerializerMethodField()
+    sender_role = serializers.CharField(
+        source="sender.role",
+        read_only=True,
+    )
+
+    class Meta:
+        model = SupportMessage
+        fields = [
+            "id",
+            "message",
+            "sender_name",
+            "sender_role",
+            "created_at",
+            "read_at",
+        ]
+
+    def get_sender_name(self, obj):
+        return f"{obj.sender.first_name} {obj.sender.last_name}".strip()

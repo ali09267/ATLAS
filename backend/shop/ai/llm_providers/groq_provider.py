@@ -11,7 +11,7 @@ def generate(system_prompt, user_prompt):
     """
 
     completion = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
+        model="openai/gpt-oss-20b",
         messages=[
             {
                 "role": "system",
@@ -28,4 +28,5 @@ def generate(system_prompt, user_prompt):
     print("\n========== GROQ RAW RESPONSE ==========")
     print(completion.choices[0].message.content)
     print("=======================================\n")
+
     return completion.choices[0].message.content.strip()
